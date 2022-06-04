@@ -14,12 +14,15 @@ namespace Backend3.Storage
         [Display(Name = ApplicationRoleNames.Administrator)]
         Administrator,
         [Display(Name = ApplicationRoleNames.User)]
-        User
+        User,
+        [Display(Name = ApplicationRoleNames.Organizer)]
+        Organizer
     }
     public class ApplicationRoleNames
     {
         public const string Administrator = "Администратор";
         public const string User = "Пользователь";
+        public const string Organizer = "Организатор";
     }
 
     public class UserRole : IdentityUserRole<Guid>

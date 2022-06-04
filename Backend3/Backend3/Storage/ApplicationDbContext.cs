@@ -10,6 +10,9 @@ namespace Backend3.Storage
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
         public override DbSet<User> Users { get; set; }
         public override DbSet<Role> Roles { get; set; }
+        public DbSet<Event> Event { get; set; }
+        public DbSet<Searching> Searching { get; set; }
+        public DbSet<UsersEvents> UsersEvents { get; set; }
         public override DbSet<UserRole> UserRoles { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -34,6 +37,36 @@ namespace Backend3.Storage
                     .HasForeignKey(x => x.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+            builder.Entity<User>().HasKey(x => x.Id);
+            builder.Entity<UsersEvents>()
+                .HasNoKey()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .HasPrincipalKey(user => user.Id)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Event>().HasKey(x => x.Id);
+            builder.Entity<UsersEvents>()
+                .HasNoKey()
+                .HasOne<Event>()
+                .WithMany()
+                .HasForeignKey(x => x.EventId)
+                .HasPrincipalKey(x => x.Id)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Searching>()
+                .HasNoKey()
+                .HasOne<Event>()
+                .WithMany()
+                .HasForeignKey(x => x.EventId)
+                .HasPrincipalKey(x => x.Id)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Searching>()
+                .HasNoKey()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(x => x.EventId)
+                .HasPrincipalKey(x => x.Id)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 

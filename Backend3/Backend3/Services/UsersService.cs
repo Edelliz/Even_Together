@@ -32,8 +32,7 @@ namespace Backend3.Services
                 Email = model.Email,
                 UserName = model.Email,
                 BirthDate = model.BirthDate,
-                Phone = model.Phone,
-                Name = model.Name
+                
             };
             var result = await _userManager.CreateAsync(user, model.Password); // Создание нового пользователя в системе с указанными данными и введенным паролем
             if (result.Succeeded) // результат может быть успешным, может также возникнуть ошибка, если был введен пароль, не отвечающий требованиям
@@ -57,7 +56,7 @@ namespace Backend3.Services
             // Далее генерируем набор клеймов, состоящих из необходимых для быстрого доступа данных
             var claims = new List<Claim>
             {
-                new ("Name", user.Name),
+                new ("UserName", user.UserName),
                 new (ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 

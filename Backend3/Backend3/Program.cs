@@ -13,11 +13,11 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<User, Role>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager<SignInManager<User>>()
-    .AddUserManager<UserManager<User>>()
-    .AddRoleManager<RoleManager<Role>>();
+builder.Services.AddIdentity<User, Role>() // ƒобавление identity к проекту
+    .AddEntityFrameworkStores<ApplicationDbContext>() // указание контекста
+    .AddSignInManager<SignInManager<User>>() // €вное указание того, что менеджер авторизации должен работать с переопределенной моделью пользовател€
+    .AddUserManager<UserManager<User>>() // аналогично дл€ менеджера юзеров
+    .AddRoleManager<RoleManager<Role>>(); // аналогично дл€ менеджера ролей
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
 builder.Services.AddScoped<IUsersService, UsersService>();
