@@ -16,8 +16,6 @@ namespace Backend3.Models
         [Display(Name = "ФИО")]
         public string Name { get; set; }
 
-        [Display(Name = "Телефон")]
-        public string Phone { get; set; }
 
         [Required(ErrorMessage = "Пароль обязателен для заполнения")]
         [DataType(DataType.Password)]

@@ -40,7 +40,6 @@ namespace Backend3.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Details(Guid id)
         {
             try

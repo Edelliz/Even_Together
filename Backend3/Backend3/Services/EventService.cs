@@ -125,7 +125,7 @@ namespace Backend3.Services
                 var human = await _context.Users.FirstOrDefaultAsync(x => x.Id == search.UserId);
                 people.Add(new ShortUserViewModel
                 {
-                    id = human.Id,
+                    Id = human.Id,
                     Name = human.FullName,
                     Avatar = human.Avatar,
                 });
