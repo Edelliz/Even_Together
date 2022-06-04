@@ -8,6 +8,7 @@ namespace Backend3.Storage
         public Guid Id { get; set; }
         public string Organizer { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
         public DateTime Date { get; set; }
         public int Price { get; set; }
         public string? Poster { get; set; }

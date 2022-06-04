@@ -7,7 +7,7 @@ namespace Backend3.Storage
         public string FullName { get; set; }
         public DateTime BirthDate { get; set; }
         public string Email { get; set; }
-        //public List<Event> Events { get; set; }
+        public string? Avatar { get; set; }
         public ICollection<UserRole> Roles { get; set; }
     }
 
