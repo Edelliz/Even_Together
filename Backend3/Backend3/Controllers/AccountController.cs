@@ -26,7 +26,7 @@ namespace Backend3.Controllers
                 try
                 {
                     await _usersService.Register(model);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Event");
                 }
                 catch (ArgumentException ex)
                 {
@@ -51,7 +51,7 @@ namespace Backend3.Controllers
                 try
                 {
                     await _usersService.Login(model);
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Event");
                 }
                 catch (Exception ex)
                 {
@@ -65,7 +65,7 @@ namespace Backend3.Controllers
         public async Task<IActionResult> Logout()
         {
             await _usersService.Logout();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Event");
         }
 
     }

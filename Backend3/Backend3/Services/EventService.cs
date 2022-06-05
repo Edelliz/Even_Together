@@ -96,7 +96,8 @@ namespace Backend3.Services
             var ev = await _context.Event.Select(x => new ShortEventViewModel
             {
                 Id = x.Id,
-                Title = x.Title
+                Title = x.Title,
+                Poster = x.Poster
             }).ToListAsync();
             return ev;
         }
