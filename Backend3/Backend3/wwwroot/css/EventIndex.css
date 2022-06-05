@@ -1,0 +1,15 @@
+﻿.event-title {
+    background-color: #05050563;
+    display: inline-block;
+}
+
+.scale {
+    transition: transform 1s; /* Время эффекта */
+    height: 350px;
+}
+
+    .scale:hover {
+        transform: scale(1.1);
+        z-index: 10;/* Увеличиваем масштаб */
+    }
+
