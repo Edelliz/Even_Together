@@ -20,7 +20,7 @@ namespace Backend3.Models
         [Required(ErrorMessage = "Обязательное поле")]
         [Display(Name = "Описание")]
         public string Description { get; set; }
-        public IFormFile Poster { get; set; }
+        public IFormFile? Poster { get; set; }
     }
 
     public class ShortEventViewModel
