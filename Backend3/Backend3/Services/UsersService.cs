@@ -32,6 +32,7 @@ namespace Backend3.Services
                 Email = model.Email,
                 UserName = model.Email,
                 BirthDate = model.BirthDate,
+                FullName = model.Name
                 
             };
             var result = await _userManager.CreateAsync(user, model.Password); // Создание нового пользователя в системе с указанными данными и введенным паролем
