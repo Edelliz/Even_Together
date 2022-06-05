@@ -6,7 +6,7 @@ namespace Backend3.Services
 {
     public interface IAccountService
     {
-        Task<UserViewModel> GetUser(Guid id);
+        Task<UserViewModel> GetUser(Guid id, string email);
         Task Edit(EditUserViewModel model);
         Task<EditUserViewModel> GetUserView(Guid id);
     }
@@ -22,9 +22,16 @@ namespace Backend3.Services
             _environment = environment;
         }
 
-        public async Task<UserViewModel> GetUser(Guid id)
+        public async Task<UserViewModel> GetUser(Guid id, string email)
         {
             var user = await Get(id);
+
+            bool isOwner = false;
+            if(user.FullName == email)
+            {
+                isOwner = true;
+            }
+
             return new UserViewModel
             {
                 Name = user.FullName,
@@ -32,6 +39,7 @@ namespace Backend3.Services
                 BirthDate = user.BirthDate,
                 Avatar = user.Avatar,
                 Id = id,
+                IsOwner = isOwner
             };
         }
         private async Task<User> Get(Guid? id)

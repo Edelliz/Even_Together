@@ -36,5 +36,6 @@ namespace Backend3.Models
         public string Organizer { get; set; }
         public DateTime Date { get; set; }
         public string Description { get; set; }
+        public bool IsOwner { get; set; }
     }
 }

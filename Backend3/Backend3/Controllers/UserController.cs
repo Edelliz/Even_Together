@@ -17,16 +17,17 @@ namespace Backend3.Controllers
             return View();
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Details(Guid id)
         {
             try
             {
-                var ev = await _accountService.GetUser(id);
+                var ev = await _accountService.GetUser(id, User.Identity.Name);
                 return View(ev);
             }
             catch
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Event");
             }
         }
 
@@ -48,7 +49,7 @@ namespace Backend3.Controllers
             }
 
             await _accountService.Edit(model);
-            return RedirectToAction("Index");
+            return RedirectToAction("Details");
         }
     }
 }
