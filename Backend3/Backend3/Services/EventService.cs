@@ -13,7 +13,7 @@ namespace Backend3.Services
         Task FindCompany(string email, Guid id);
         Task BuyTicket(string email, Guid id);
         Task<List<ShortUserViewModel>> GetSearching(Guid eventId);
-        Task<EventViewModel> GetEvent(Guid id);
+        Task<EventViewModel> GetEvent(Guid id, string userEmail);
     }
     public class EventService : IEventService
     {
@@ -68,9 +68,16 @@ namespace Backend3.Services
         }
 
         
-        public async Task<EventViewModel> GetEvent(Guid id)
+        public async Task<EventViewModel> GetEvent(Guid id, string userEmail)
         {
             var ev = await Get(id);
+
+            bool isOWner = false;
+            if(ev.Organizer == userEmail)
+            {
+                isOWner = true;
+            }
+
             return new EventViewModel
             {
                 Description = ev.Description,
@@ -79,6 +86,8 @@ namespace Backend3.Services
                 Date = ev.Date,
                 Poster = ev.Poster,
                 Price = ev.Price,
+                Organizer = ev.Organizer,
+                IsOwner = isOWner
             };
         }
         private async Task<Event> Get(Guid? id)

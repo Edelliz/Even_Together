@@ -44,8 +44,8 @@ namespace Backend3.Controllers
         {
             try
             {
-                var ev = await _eventService.GetEvent(id);
-                ViewBag.Author = ev.Organizer;
+                string userEmail = User.Identity.Name;
+                var ev = await _eventService.GetEvent(id, userEmail);
                 return View(ev);
             }
             catch
@@ -72,7 +72,7 @@ namespace Backend3.Controllers
             }
 
             await _eventService.ChangeEvent(model);
-            return RedirectToAction("Index");
+            return RedirectToAction("Details");
         }
 
         [HttpPost]
@@ -81,7 +81,7 @@ namespace Backend3.Controllers
         {
             string userEmail = User.Identity.Name;
             await _eventService.FindCompany(userEmail, id);
-            return RedirectToAction("Details");
+            return RedirectToAction("GetPeopleSearchigCompany");
         }
 
         [HttpGet]
