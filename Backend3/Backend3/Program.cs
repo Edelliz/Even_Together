@@ -20,6 +20,8 @@ builder.Services.AddIdentity<User, Role>() // Добавление identity к проекту
     .AddRoleManager<RoleManager<Role>>(); // аналогично для менеджера ролей
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
+
+builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 
 var app = builder.Build();

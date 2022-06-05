@@ -2,8 +2,20 @@
 
 namespace Backend3.Models
 {
-    public class RegisterViewModel
+    public class ShortUserViewModel
     {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string? Avatar { get; set; }
+    }
+    public class UserViewModel: ShortUserViewModel
+    {
+        public string Email { get; set; }
+        public DateTime BirthDate { get; set; }
+    }
+    public class EditUserViewModel
+    {
+        public Guid Id { get; set; }
         [Required(ErrorMessage = "Email обязателен для заполнения")]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -16,17 +28,7 @@ namespace Backend3.Models
         [Display(Name = "ФИО")]
         public string Name { get; set; }
 
-
-        [Required(ErrorMessage = "Пароль обязателен для заполнения")]
-        [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
-        public string Password { get; set; }
-
-        [Required(ErrorMessage = "Подтверждение пароля обязательно для заполнения")]
-        [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-        [DataType(DataType.Password)]
-        [Display(Name = "Подтвердить пароль")]
-        public string PasswordConfirm { get; set; }
+        public IFormFile Avatar { get; set; }
 
     }
 }
