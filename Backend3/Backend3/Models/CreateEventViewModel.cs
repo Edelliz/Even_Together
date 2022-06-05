@@ -27,6 +27,8 @@ namespace Backend3.Models
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
+
+        public string? Poster { get; set; }
     }
     public class EventViewModel : ShortEventViewModel
     {
@@ -34,6 +36,5 @@ namespace Backend3.Models
         public string Organizer { get; set; }
         public DateTime Date { get; set; }
         public string Description { get; set; }
-        public string? Poster { get; set; }
     }
 }
