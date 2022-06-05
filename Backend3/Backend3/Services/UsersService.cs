@@ -17,12 +17,13 @@ namespace Backend3.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-
+        private readonly ApplicationDbContext _context;
         public UsersService(UserManager<User> userManager,
-                SignInManager<User> signInManager)
+                SignInManager<User> signInManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public async Task Register(RegisterViewModel model)
@@ -32,12 +33,25 @@ namespace Backend3.Services
                 Email = model.Email,
                 UserName = model.Email,
                 BirthDate = model.BirthDate,
-                FullName = model.Name
-                
+                FullName = model.Name,
             };
+
+            var role = _context.Roles.FirstOrDefault(x => x.Type == RoleType.User);
+            if (model.IsOrganizer)
+            {
+                role = _context.Roles.FirstOrDefault(x => x.Type == RoleType.Organizer);
+            }
+
             var result = await _userManager.CreateAsync(user, model.Password); // Создание нового пользователя в системе с указанными данными и введенным паролем
             if (result.Succeeded) // результат может быть успешным, может также возникнуть ошибка, если был введен пароль, не отвечающий требованиям
             {
+                var userRole = new UserRole
+                {
+                    User = user,
+                    Role = role
+                };
+                _context.Add(userRole);
+                await _context.SaveChangesAsync();
                 // Если регистрация прошла успешно, авторизуем пользователя в системе. Следующая строка создает cookie, который будет использоватся в следующих запросах от пользователя
                 await _signInManager.SignInAsync(user, false);
                 return;

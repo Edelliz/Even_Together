@@ -26,6 +26,17 @@
         <input type="date" class="form-control" asp-for="BirthDate">
         <span class="text-danger" asp-validation-for="BirthDate"></span>
     </div>
+    <div class="mb-3">
+        <label class="form-label" asp-for="IsOrganizer"></label>
+        <input type="checkbox"  asp-for="IsOrganizer">
+        <span class="text-danger" asp-validation-for="IsOrganizer"></span>
+  </div>
+  <div class="form-group">
+        <div class="form-group col-md-4 col-sm-6 col-12">
+            <label class="form-label" for="file" asp-for="Avatar"></label>
+            <input asp-for="Avatar" type="file" id="file" class="form-control">
+        </div>
+    </div>
     <div class="text-danger" asp-validation-summary="All"></div>
     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
 </form>

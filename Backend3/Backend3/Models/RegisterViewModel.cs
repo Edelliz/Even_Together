@@ -27,6 +27,8 @@ namespace Backend3.Models
         [DataType(DataType.Password)]
         [Display(Name = "Подтвердить пароль")]
         public string PasswordConfirm { get; set; }
-
+        [Display(Name = "Вы организатор?")]
+        public bool IsOrganizer { get; set; }
+        public IFormFile? Avatar { get; set; }
     }
 }
