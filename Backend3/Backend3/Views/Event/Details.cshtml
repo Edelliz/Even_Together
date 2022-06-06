@@ -1,6 +1,6 @@
 ﻿@model Backend3.Models.EventViewModel
 @section Styles {
-    <link href="~/css/EventDetails.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+<link href="~/css/EventDetails.css" rel="stylesheet" type="text/css" asp-append-version="true" />
 }
 
 @{
@@ -10,10 +10,16 @@
 
 <h3>@Model.Title</h3>
 
-<h6>Адрес встречи: <b>КАКОЙ-ТО АДРЕС</b>, Дата встречи: @DateOfEvent</h6>
+<h6>Адрес встречи: <b>@Model.Place</b>, Дата встречи: @DateOfEvent</h6>
 
 
 <button type="button" class="btn btn-primary">Купить билет</button>
+
+<form method="post" asp-action="FindCompany" asp-route-id="@Model.Id">
+    
+        <input type="submit" value="Найти компанию" class="btn btn-dark end-0" />
+    
+</form>
 
 <div class="d-flex justify-content-center m-4">
     @if (String.IsNullOrEmpty(@Model.Poster))
@@ -46,10 +52,75 @@
                 <p class="card-text">@Model.Description</p>
             </div>
             <div class="tab-pane" id="participants-event">
-                <p class="card-text">Список участников, которые ищут компанию</p>
+                <table class="w-100 h-100">
+                    <tbody class="w-100">
+                        @{
+                            for (int i = 0; i < Model.Searching.Count; i += 3)
+                            {
+                                <tr class="row w-100 d-flex-column justify-content-between">
+                                    @for (int j = i; j < i + 3; j++)
+                                    {
+                                        <td class="col-4 cardsFeed p-3">
+                                            <a asp-action="Details" asp-route-id="@Model.Searching[j].Id" class="scale card w-100">
+                                                @if (String.IsNullOrEmpty(Model.Searching[j].Avatar))
+                                                {
+                                                    <img id="event-@Model.Searching[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
+                                                }
+                                                else
+                                                {
+                                                    <img id="event-@Model.Searching[j].Id" class="card-img-top h-100" src="@Model.Searching[j].Avatar">
+                                                }
+                                                <div class="card-img-overlay h-100 ">
+                                                    <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Searching[j].Name</h4>
+                                                </div>
+                                            </a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+
             </div>
             <div class="tab-pane" id="review-event">
-                <p class=" card-text">Список отзывов</p>
+
+                <form method="post" asp-action="">
+                    <input name="Text" class="form-control inputFields" />
+                    <input name="PostId" value="@Model.Id" class="form-control border-2 border-dark" type="hidden" />
+                    <div class="form-group mt-3 w-100 text-end">
+                        <input type="submit" value="Комментировать" class="btnAddComment btn btn-dark end-0" />
+                    </div>
+                </form>
+
+
+
+                @*<div class="blog-posts">
+                    <div class="blog-posts-items">
+                    @foreach (var item in Model.Comments.OrderByDescending(x => x.Created))
+                    {
+                    <div class="blog-post panel panel-default rounded bg-light border border-2 border-dark mt-3 ">
+                    <div class="panel-heading inputFields border-bottom border-1 border-dark  ps-2 pt-1 pb-1 w-100 d-flex flex-row justify-content-between">
+                    <div class="text-dark ps-2">@item.User.UserName | @item.Created</div>
+                    <div class="text-end text-dark pe-3">
+                    @if (UserPermissions.CanEditPostComment(item))
+                    {
+                    <form method="post" asp-action="DeleteComment" asp-controller="Posts" asp-route-id="@item.Id">
+                    <div class="form-actions no-color">
+                    <input type="submit" value="Удалить" />
+                    </div>
+                    </form>
+                    }
+                    </div>
+                    </div>
+                    <div class="panel-body inputFields pt-2 pb-2 ps-4 ">
+                    <div class="blog-post-text inputFields text-dark">@item.Text</div>
+                    </div>
+                    </div>
+                    }
+                    </div>
+                    </div>*@
             </div>
         </form>
     </div>
