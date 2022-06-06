@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Backend3.Storage
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -43,7 +47,7 @@
                         else
                         {
                             <li class="nav-item m-1">
-                                @User.Identity.Name
+                                <a class="nav-link text-dark" asp-controller="User" asp-route-id="@UserManager.GetUserId(User)" asp-action="Details">@User.Identity.Name</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Выход</a>
