@@ -36,6 +36,7 @@ namespace Backend3.Services
             ev.Title = model.Title;
             ev.Description = model.Description;
             ev.Price = model.Price;
+            ev.Place = model.Place;
 
             var fileNameWithPath = await AddFile(model.Poster);
             if (fileNameWithPath is not null)
@@ -61,6 +62,7 @@ namespace Backend3.Services
                 Price = model.Price,
                 Organizer = email,
                 Poster = fileNameWithPath,
+                Place = model.Place,
             };
 
             await _context.Event.AddAsync(ev);
@@ -87,8 +89,16 @@ namespace Backend3.Services
                 Poster = ev.Poster,
                 Price = ev.Price,
                 Organizer = ev.Organizer,
-                IsOwner = isOWner
+                IsOwner = isOWner,
+                Searching = await GetSearching(id),
+                Grade = ev.Grade,
+                Place = ev.Place,
+                Reviews = await GetReviews(id)
             };
+        }
+        public async Task<List<Review>> GetReviews(Guid id)
+        {
+            return await _context.Review.Where(x => x.EventId == id).ToListAsync();
         }
         private async Task<Event> Get(Guid? id)
         {

@@ -11,6 +11,7 @@ namespace Backend3.Storage
         public override DbSet<User> Users { get; set; }
         public override DbSet<Role> Roles { get; set; }
         public DbSet<Event> Event { get; set; }
+        public DbSet<Review> Review { get; set; }
         public DbSet<Searching> Searching { get; set; }
         public DbSet<UsersEvents> UsersEvents { get; set; }
         public override DbSet<UserRole> UserRoles { get; set; }
@@ -44,7 +45,7 @@ namespace Backend3.Storage
                 .WithMany()
                 .HasForeignKey(x => x.UserId)
                 .HasPrincipalKey(user => user.Id)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Event>().HasKey(x => x.Id);
             builder.Entity<UsersEvents>()
                 .HasNoKey()
@@ -52,21 +53,29 @@ namespace Backend3.Storage
                 .WithMany()
                 .HasForeignKey(x => x.EventId)
                 .HasPrincipalKey(x => x.Id)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Searching>()
                 .HasNoKey()
                 .HasOne<Event>()
                 .WithMany()
                 .HasForeignKey(x => x.EventId)
                 .HasPrincipalKey(x => x.Id)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Searching>()
                 .HasNoKey()
                 .HasOne<User>()
                 .WithMany()
                 .HasForeignKey(x => x.EventId)
                 .HasPrincipalKey(x => x.Id)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Event>().HasKey(x => x.Id);
+            builder.Entity<Review>()
+                .HasNoKey()
+                .HasOne<Event>()
+                .WithMany()
+                .HasForeignKey(x => x.EventId)
+                .HasPrincipalKey(x => x.Id)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

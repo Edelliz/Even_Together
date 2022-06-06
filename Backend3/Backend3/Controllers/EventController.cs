@@ -81,24 +81,9 @@ namespace Backend3.Controllers
         {
             string userEmail = User.Identity.Name;
             await _eventService.FindCompany(userEmail, id);
-            return RedirectToAction("GetPeopleSearchigCompany");
+            return RedirectToAction("Details");
         }
 
-        [HttpGet]
-        [Authorize]
-        [Route("{id}/company")]
-        public async Task<IActionResult> GetPeopleSearchigCompany(Guid id)
-        {
-            try
-            {
-                var people = await _eventService.GetSearching(id);
-                return View(people);
-            }
-            catch
-            {
-                return RedirectToAction("Index");
-            }
-        }
 
         [HttpPost]
         [Authorize]
