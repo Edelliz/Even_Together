@@ -13,6 +13,7 @@ namespace Backend3.Models
         public string Email { get; set; }
         public DateTime BirthDate { get; set; }
         public bool IsOwner { get; set; }
+        public List<ShortEventViewModel> UsersEvents { get; set; }
     }
     public class EditUserViewModel
     {

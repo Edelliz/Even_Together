@@ -39,8 +39,21 @@ namespace Backend3.Services
                 BirthDate = user.BirthDate,
                 Avatar = user.Avatar,
                 Id = id,
-                IsOwner = isOwner
+                IsOwner = isOwner,
+                UsersEvents = await GetEvents(id)
             };
+        }
+        private async Task<List<ShortEventViewModel>> GetEvents(Guid id)
+        {
+            var usersEvent = _context.UsersEvents.Where(x => x.UserId == id);
+            var events = _context.Event.Where(x => usersEvent.Any(y => y.EventId == x.Id));
+            
+            return await events.Select(x => new ShortEventViewModel
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Poster = x.Poster
+            }).ToListAsync();
         }
         private async Task<User> Get(Guid? id)
         {
