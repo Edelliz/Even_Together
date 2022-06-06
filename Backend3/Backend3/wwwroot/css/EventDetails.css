@@ -1,0 +1,11 @@
+﻿.card-header {
+    background: none !important;
+}
+
+.card{
+    border: none;
+}
+
+a {
+    color: black !important;
+}

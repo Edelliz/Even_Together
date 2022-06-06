@@ -1,0 +1,56 @@
+﻿@model Backend3.Models.EventViewModel
+@section Styles {
+    <link href="~/css/EventDetails.css" rel="stylesheet" type="text/css" asp-append-version="true" />
+}
+
+@{
+    String DateOfEvent = @Model.Date.Day + "." + @Model.Date.Month + "." + @Model.Date.Year + " " + @Model.Date.Hour + ":" + @Model.Date.Minute;
+    ViewData["Title"] = "Details";
+}
+
+<h3>@Model.Title</h3>
+
+<h6>Адрес встречи: <b>КАКОЙ-ТО АДРЕС</b>, Дата встречи: @DateOfEvent</h6>
+
+
+<button type="button" class="btn btn-primary">Купить билет</button>
+
+<div class="d-flex justify-content-center m-4">
+    @if (String.IsNullOrEmpty(@Model.Poster))
+    {
+        <img id="event-@Model.Id-details" class="rounded" src="/files/imgplaceholder.png">
+    }
+    else
+    {
+        <img id="event-@Model.Id-details" class="rounded" src="/@Model.Poster">
+    }
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#info-event"><b>Информация о мероприятии</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#participants-event"><b>Искатели</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#review-event"><b>Отзывы</b></a>
+                </li>
+            </ul>
+        </div>
+        <form class="card-body tab-content">
+            <div class="tab-pane active" id="info-event">
+                <p class="card-text">@Model.Description</p>
+            </div>
+            <div class="tab-pane" id="participants-event">
+                <p class="card-text">Список участников, которые ищут компанию</p>
+            </div>
+            <div class="tab-pane" id="review-event">
+                <p class=" card-text">Список отзывов</p>
+            </div>
+        </form>
+    </div>
+</div>
