@@ -87,7 +87,8 @@ namespace Backend3.Services
                 Poster = ev.Poster,
                 Price = ev.Price,
                 Organizer = ev.Organizer,
-                IsOwner = isOWner
+                IsOwner = isOWner,
+                Searching = await GetSearching(id)
             };
         }
         private async Task<Event> Get(Guid? id)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Backend3.Storage;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend3.Models
 {
@@ -37,5 +38,6 @@ namespace Backend3.Models
         public DateTime Date { get; set; }
         public string Description { get; set; }
         public bool IsOwner { get; set; }
+        public List<ShortUserViewModel> Searching { get; set; }
     }
 }
