@@ -21,6 +21,9 @@ namespace Backend3.Models
         [Required(ErrorMessage = "Обязательное поле")]
         [Display(Name = "Описание")]
         public string Description { get; set; }
+        [Required(ErrorMessage = "Обязательное поле")]
+        [Display(Name = "Место проведения")]
+        public string Place { get; set; }
         public IFormFile? Poster { get; set; }
     }
 
@@ -39,5 +42,8 @@ namespace Backend3.Models
         public string Description { get; set; }
         public bool IsOwner { get; set; }
         public List<ShortUserViewModel> Searching { get; set; }
+        public int Grade { get; set; }
+        public string Place { get; set; }
+        public List<Review> Reviews { get; set; }
     }
 }

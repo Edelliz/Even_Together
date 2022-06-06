@@ -12,6 +12,8 @@ namespace Backend3.Storage
         public DateTime Date { get; set; }
         public int Price { get; set; }
         public string? Poster { get; set; }
+        public int Grade { get; set; }
+        public string Place { get; set; }
     }
 
     public class Searching
