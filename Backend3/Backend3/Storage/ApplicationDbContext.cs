@@ -39,8 +39,9 @@ namespace Backend3.Storage
                     .OnDelete(DeleteBehavior.Cascade);
             });
             builder.Entity<User>().HasKey(x => x.Id);
+            builder.Entity<UsersEvents>().HasKey(u => new { u.EventId, u.UserId });
+            builder.Entity<Searching>().HasKey(u => new { u.EventId, u.UserId });
             builder.Entity<UsersEvents>()
-                .HasNoKey()
                 .HasOne<User>()
                 .WithMany()
                 .HasForeignKey(x => x.UserId)
@@ -48,21 +49,18 @@ namespace Backend3.Storage
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Event>().HasKey(x => x.Id);
             builder.Entity<UsersEvents>()
-                .HasNoKey()
                 .HasOne<Event>()
                 .WithMany()
                 .HasForeignKey(x => x.EventId)
                 .HasPrincipalKey(x => x.Id)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Searching>()
-                .HasNoKey()
                 .HasOne<Event>()
                 .WithMany()
                 .HasForeignKey(x => x.EventId)
                 .HasPrincipalKey(x => x.Id)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Searching>()
-                .HasNoKey()
                 .HasOne<User>()
                 .WithMany()
                 .HasForeignKey(x => x.EventId)
