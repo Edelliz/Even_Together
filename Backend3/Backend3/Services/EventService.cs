@@ -154,7 +154,7 @@ namespace Backend3.Services
         }
         public async Task FindCompany(string email, Guid id)
         {
-            var user = GetUser(email);
+            var user = await GetUser(email);
             await _context.Searching.AddAsync(new Searching
             {
                 UserId = user.Id,
@@ -164,7 +164,7 @@ namespace Backend3.Services
         }
         public async Task BuyTicket(string email, Guid id)
         {
-            var user = GetUser(email);
+            var user = await GetUser(email);
             await _context.UsersEvents.AddAsync(new UsersEvents
             {
                 UserId = user.Id,
@@ -173,9 +173,9 @@ namespace Backend3.Services
             await _context.SaveChangesAsync();
         }
 
-        private User GetUser(string email)
+        private async Task<User> GetUser(string email)
         {
-            return _context.Users.FirstOrDefault(x => x.Email == email);
+            return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<string> AddFile(IFormFile file)

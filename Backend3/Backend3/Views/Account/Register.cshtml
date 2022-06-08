@@ -31,12 +31,13 @@
         <input type="checkbox"  asp-for="IsOrganizer">
         <span class="text-danger" asp-validation-for="IsOrganizer"></span>
   </div>
-  <div class="form-group">
-        <div class="form-group col-md-4 col-sm-6 col-12">
-            <label class="form-label" for="file" asp-for="Avatar"></label>
-            <input asp-for="Avatar" type="file" id="file" class="form-control">
-        </div>
-    </div>
+ <div class="form-group custom-file">
+                <label asp-for="Avatar" class="custom-file-label control-label" for="customFile">Аватар</label>
+                <div class="col-md-10">
+                    <input type="file" asp-for="Avatar" class="custom-file-input form-control" id="customFile" />
+                    <span asp-validation-for="Avatar" class="text-danger"></span>
+                </div>
+            </div>
     <div class="text-danger" asp-validation-summary="All"></div>
     <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
 </form>

@@ -11,14 +11,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Backend3.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/EventIndex.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    @RenderSection("Styles", false)
 </head>
 <body>
     <header class="container">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 d-flex">
             <div class="container-fluid d-flex justify-content-between">
-                <a class="col-2 navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EventTogether</a>
+                <a class="col-2 navbar-brand" asp-area="" asp-controller="Event" asp-action="Index">EventTogether</a>
                 <div class="input-group w-75 d-flex align-self-center justify-content-center row">
                     <div class="form-outline col-5 p-0">
                         <input type="search" id="form1" placeholder="Искать..." class="form-control rounded-pill bg-light">

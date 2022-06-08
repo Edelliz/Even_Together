@@ -32,34 +32,8 @@ var app = builder.Build();
 using var serviceScope = app.Services.CreateScope();
 var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
 context.Database.Migrate();
+await app.ConfigureIdentityAsync();
 
-if(context.Roles.FirstOrDefault(x => x.Type == RoleType.User) == default)
-{
-    var role = new Role
-    {
-        Type = RoleType.User
-    };
-    context.Add(role);
-    context.SaveChanges();
-}
-if (context.Roles.FirstOrDefault(x => x.Type == RoleType.Organizer) == default)
-{
-    var role = new Role
-    {
-        Type = RoleType.Organizer
-    };
-    context.Add(role);
-    context.SaveChanges();
-}
-if (context.Roles.FirstOrDefault(x => x.Type == RoleType.Administrator) == default)
-{
-    var role = new Role
-    {
-        Type = RoleType.Administrator
-    };
-    context.Add(role);
-    context.SaveChanges();
-}
 
 app.UseAuthentication();
 app.UseAuthorization();
