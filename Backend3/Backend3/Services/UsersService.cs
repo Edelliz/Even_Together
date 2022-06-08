@@ -34,7 +34,7 @@ namespace Backend3.Services
 
         public async Task Register(RegisterViewModel model)
         {
-            
+
             var user = new User
             {
                 Email = model.Email,
@@ -53,19 +53,7 @@ namespace Backend3.Services
             var result = await _userManager.CreateAsync(user, model.Password); // Создание нового пользователя в системе с указанными данными и введенным паролем
             if (result.Succeeded) // результат может быть успешным, может также возникнуть ошибка, если был введен пароль, не отвечающий требованиям
             {
-                /*var userRole = new UserRole
-                {
-                    User = user,
-                    Role = role
-                };
-                _context.Add(userRole);
-                await _context.SaveChangesAsync();*/
-
-                
-                    await _userManager.AddToRoleAsync(user, role.Name); // назначение на роль происходит через сущность пользователя и название роли (строка). Если при обычной процедуре регистрации нужно назначить роль обычного пользователя к новому зарегистрированному, необходимо будет после регистрации использовать данный метод для назначения пользователя на роль.
-                
-
-
+                await _userManager.AddToRoleAsync(user, role.Name); // назначение на роль происходит через сущность пользователя и название роли (строка). Если при обычной процедуре регистрации нужно назначить роль обычного пользователя к новому зарегистрированному, необходимо будет после регистрации использовать данный метод для назначения пользователя на роль.
                 // Если регистрация прошла успешно, авторизуем пользователя в системе. Следующая строка создает cookie, который будет использоватся в следующих запросах от пользователя
                 await _signInManager.SignInAsync(user, false);
                 return;
