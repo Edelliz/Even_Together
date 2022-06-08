@@ -10,16 +10,38 @@
 
 <h3>@Model.Title</h3>
 
-<h6>Адрес встречи: <b>@Model.Place</b>, Дата встречи: @DateOfEvent</h6>
+<h6>Адрес встречи: <b>@Model.Place</b>, Дата встречи: @DateOfEvent, Стоимость: @Model.Price</h6>
 
 
-<button type="button" class="btn btn-primary">Купить билет</button>
+<div class="d-flex justify-content-start">
+    <button id="btn-buy-ticket" type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Купить билет</button>
 
-<form method="post" asp-action="FindCompany" asp-route-id="@Model.Id">
-    
+    <form method="post" asp-action="FindCompany" asp-route-id="@Model.Id" class="m-2">
         <input type="submit" value="Найти компанию" class="btn btn-dark end-0" />
-    
-</form>
+    </form>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Вы хотите купить билет на мероприятие: @Model.Title, которое состоится: @DateOfEvent, стоимость: @Model.Price?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                <form method="post" asp-action="BuyTicket" asp-route-id="@Model.Id" class="m-2">
+                    <input type="submit" value="Купить" class="btn btn-dark end-0" />
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="d-flex justify-content-center m-4">
     @if (String.IsNullOrEmpty(@Model.Poster))
@@ -55,27 +77,48 @@
                 <table class="w-100 h-100">
                     <tbody class="w-100">
                         @{
-                            for (int i = 0; i < Model.Searching.Count; i += 3)
+                            //for (int i = 0; i < Model.Searching.Count; i += 3)
+                            //{
+                            //    <tr class="row w-100 d-flex-column justify-content-between">
+                            //        @for (int j = i; j < i + 3; j++)
+                            //        {
+                            //            <td class="col-4 cardsFeed p-3">
+                            //                <a asp-action="Details" asp-route-id="@Model.Searching[j].Id" class="scale card w-100">
+                            //                    @if (String.IsNullOrEmpty(Model.Searching[j].Avatar))
+                            //                    {
+                            //                        <img id="event-@Model.Searching[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
+                            //                    }
+                            //                    else
+                            //                    {
+                            //                        <img id="event-@Model.Searching[j].Id" class="card-img-top h-100" src="@Model.Searching[j].Avatar">
+                            //                    }
+                            //                    <div class="card-img-overlay h-100 ">
+                            //                        <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Searching[j].Name</h4>
+                            //                    </div>
+                            //                </a>
+                            //            </td>
+                            //        }
+                            //    </tr>
+                            //}
+
+                            foreach (var item in Model.Searching)
                             {
                                 <tr class="row w-100 d-flex-column justify-content-between">
-                                    @for (int j = i; j < i + 3; j++)
-                                    {
-                                        <td class="col-4 cardsFeed p-3">
-                                            <a asp-action="Details" asp-route-id="@Model.Searching[j].Id" class="scale card w-100">
-                                                @if (String.IsNullOrEmpty(Model.Searching[j].Avatar))
-                                                {
-                                                    <img id="event-@Model.Searching[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
-                                                }
-                                                else
-                                                {
-                                                    <img id="event-@Model.Searching[j].Id" class="card-img-top h-100" src="@Model.Searching[j].Avatar">
-                                                }
-                                                <div class="card-img-overlay h-100 ">
-                                                    <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Searching[j].Name</h4>
-                                                </div>
-                                            </a>
-                                        </td>
-                                    }
+                                    <td class="col-4 cardsFeed p-3">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="scale card w-100">
+                                            @if (String.IsNullOrEmpty(@item.Avatar))
+                                            {
+                                                <img id="event-@item.Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
+                                            }
+                                            else
+                                            {
+                                                <img id="event-@item.Id" class="card-img-top h-100" src="@item.Avatar">
+                                            }
+                                            <div class="card-img-overlay h-100 ">
+                                                <h4 class="event-title card-title text-light rounded-pill p-2">@item.Name</h4>
+                                            </div>
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         }
@@ -125,3 +168,7 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+<script src="~/js/detailsEvent.js" asp-append-version="true"></script>
+}
