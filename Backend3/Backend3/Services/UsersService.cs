@@ -18,22 +18,30 @@ namespace Backend3.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _environment;
+        private readonly RoleManager<Role> _roleManager;
+
+        private static string[] AllowedExtensions { get; set; } = { "jpg", "jpeg", "png" };
         public UsersService(UserManager<User> userManager,
-                SignInManager<User> signInManager, ApplicationDbContext context)
+                SignInManager<User> signInManager, ApplicationDbContext context, IWebHostEnvironment environment, RoleManager<Role> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _environment = environment;
+            _roleManager = roleManager;
         }
 
         public async Task Register(RegisterViewModel model)
         {
+            
             var user = new User
             {
                 Email = model.Email,
                 UserName = model.Email,
                 BirthDate = model.BirthDate,
                 FullName = model.Name,
+                Avatar = await AddFile(model.Avatar)
             };
 
             var role = _context.Roles.FirstOrDefault(x => x.Type == RoleType.User);
@@ -45,13 +53,19 @@ namespace Backend3.Services
             var result = await _userManager.CreateAsync(user, model.Password); // Создание нового пользователя в системе с указанными данными и введенным паролем
             if (result.Succeeded) // результат может быть успешным, может также возникнуть ошибка, если был введен пароль, не отвечающий требованиям
             {
-                var userRole = new UserRole
+                /*var userRole = new UserRole
                 {
                     User = user,
                     Role = role
                 };
                 _context.Add(userRole);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();*/
+
+                
+                    await _userManager.AddToRoleAsync(user, role.Name); // назначение на роль происходит через сущность пользователя и название роли (строка). Если при обычной процедуре регистрации нужно назначить роль обычного пользователя к новому зарегистрированному, необходимо будет после регистрации использовать данный метод для назначения пользователя на роль.
+                
+
+
                 // Если регистрация прошла успешно, авторизуем пользователя в системе. Следующая строка создает cookie, который будет использоватся в следующих запросах от пользователя
                 await _signInManager.SignInAsync(user, false);
                 return;
@@ -72,6 +86,7 @@ namespace Backend3.Services
             var claims = new List<Claim>
             {
                 new ("UserName", user.UserName),
+                 new ("Id", user.Id.ToString()),
                 new (ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
@@ -99,6 +114,24 @@ namespace Backend3.Services
             await _signInManager.SignOutAsync();
         }
 
-
+        public async Task<string> AddFile(IFormFile file)
+        {
+            var isFileAttached = file != null;
+            string fileNameWithPath = null;
+            if (isFileAttached)
+            {
+                var extension = Path.GetExtension(file.FileName).Replace(".", "");
+                if (!AllowedExtensions.Contains(extension))
+                {
+                    throw new ArgumentException("Attached file has not supported extension");
+                }
+                fileNameWithPath = $"files/{Guid.NewGuid()}-{file.FileName}";
+                using (var fs = new FileStream(Path.Combine(_environment.WebRootPath, fileNameWithPath), FileMode.Create))
+                {
+                    await file.CopyToAsync(fs);
+                }
+            }
+            return fileNameWithPath;
+        }
     }
 }
