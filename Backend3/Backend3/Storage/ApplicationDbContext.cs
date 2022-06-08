@@ -63,7 +63,7 @@ namespace Backend3.Storage
             builder.Entity<Searching>()
                 .HasOne<User>()
                 .WithMany()
-                .HasForeignKey(x => x.EventId)
+                .HasForeignKey(x => x.UserId)
                 .HasPrincipalKey(x => x.Id)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Event>().HasKey(x => x.Id);
