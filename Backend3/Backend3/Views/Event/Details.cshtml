@@ -77,48 +77,27 @@
                 <table class="w-100 h-100">
                     <tbody class="w-100">
                         @{
-                            //for (int i = 0; i < Model.Searching.Count; i += 3)
-                            //{
-                            //    <tr class="row w-100 d-flex-column justify-content-between">
-                            //        @for (int j = i; j < i + 3; j++)
-                            //        {
-                            //            <td class="col-4 cardsFeed p-3">
-                            //                <a asp-action="Details" asp-route-id="@Model.Searching[j].Id" class="scale card w-100">
-                            //                    @if (String.IsNullOrEmpty(Model.Searching[j].Avatar))
-                            //                    {
-                            //                        <img id="event-@Model.Searching[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
-                            //                    }
-                            //                    else
-                            //                    {
-                            //                        <img id="event-@Model.Searching[j].Id" class="card-img-top h-100" src="@Model.Searching[j].Avatar">
-                            //                    }
-                            //                    <div class="card-img-overlay h-100 ">
-                            //                        <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Searching[j].Name</h4>
-                            //                    </div>
-                            //                </a>
-                            //            </td>
-                            //        }
-                            //    </tr>
-                            //}
-
-                            foreach (var item in Model.Searching)
+                            for (int i = 0; i < Model.Searching.Count; i += 3)
                             {
                                 <tr class="row w-100 d-flex-column justify-content-between">
-                                    <td class="col-4 cardsFeed p-3">
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="scale card w-100">
-                                            @if (String.IsNullOrEmpty(@item.Avatar))
-                                            {
-                                                <img id="event-@item.Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
-                                            }
-                                            else
-                                            {
-                                                <img id="event-@item.Id" class="card-img-top h-100" src="@item.Avatar">
-                                            }
-                                            <div class="card-img-overlay h-100 ">
-                                                <h4 class="event-title card-title text-light rounded-pill p-2">@item.Name</h4>
-                                            </div>
-                                        </a>
-                                    </td>
+                                    @for (int j = i; j < Math.Min(i + 3, Model.Searching.Count); j++)
+                                    {
+                                        <td class="col-4 cardsFeed p-3">
+                                            <a asp-controller="User" asp-action="Details" asp-route-id="@Model.Searching[j].Id" class="scale card w-100">
+                                                @if (String.IsNullOrEmpty(Model.Searching[j].Avatar))
+                                                {
+                                                    <img id="user-@Model.Searching[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
+                                                }
+                                                else
+                                                {
+                                                    <img id="user-@Model.Searching[j].Id" class="card-img-top h-100" src="@Model.Searching[j].Avatar">
+                                                }
+                                                <div class="card-img-overlay h-100 ">
+                                                    <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Searching[j].Name</h4>
+                                                </div>
+                                            </a>
+                                        </td>
+                                    }
                                 </tr>
                             }
                         }
