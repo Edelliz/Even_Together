@@ -31,8 +31,9 @@ var app = builder.Build();
 using var serviceScope = app.Services.CreateScope();
 var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
 context.Database.Migrate();
+await app.ConfigureIdentityAsync();
 
-if(context.Roles.FirstOrDefault(x => x.Type == RoleType.User) == default)
+/*if (context.Roles.FirstOrDefault(x => x.Type == RoleType.User) == default)
 {
     var role = new Role
     {
@@ -58,7 +59,7 @@ if (context.Roles.FirstOrDefault(x => x.Type == RoleType.Administrator) == defau
     };
     context.Add(role);
     context.SaveChanges();
-}
+}*/
 
 app.UseAuthentication();
 app.UseAuthorization();
