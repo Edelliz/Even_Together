@@ -12,9 +12,9 @@ namespace Backend3.Controllers
         {
             _eventService = eventService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(DateTime? data)
         {
-            var ev = await _eventService.GetAllEvent();
+            var ev = await _eventService.GetAllEvent(data);
             return View(ev);
         }
 
