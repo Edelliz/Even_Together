@@ -8,7 +8,7 @@ namespace Backend3.Services
     {
         Task CreateEvent(CreateEventViewModel model, string email);
         Task ChangeEvent(CreateEventViewModel model);
-        Task<List<ShortEventViewModel>> GetAllEvent();
+        Task<List<ShortEventViewModel>> GetAllEvent(DateTime? data);
         Task<CreateEventViewModel> GetEventView(Guid id);
         Task FindCompany(string email, Guid id);
         Task BuyTicket(string email, Guid id);
@@ -110,14 +110,30 @@ namespace Backend3.Services
             return ev;
         }
 
-        public async Task<List<ShortEventViewModel>> GetAllEvent()
+        public async Task<List<ShortEventViewModel>> GetAllEvent(DateTime? data)
         {
-            var ev = await _context.Event.Select(x => new ShortEventViewModel
+            List<ShortEventViewModel> ev;
+            if (data == null)
             {
-                Id = x.Id,
-                Title = x.Title,
-                Poster = x.Poster
-            }).ToListAsync();
+                ev = await _context.Event.Select(x => new ShortEventViewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Poster = x.Poster
+                }).ToListAsync();
+            }
+            else
+            {
+                var events = _context.Event.Where(x => x.Date == data);
+
+                ev = await events.Select(x => new ShortEventViewModel
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Poster = x.Poster
+                }).ToListAsync();
+            }
+            
             return ev;
         }
 
