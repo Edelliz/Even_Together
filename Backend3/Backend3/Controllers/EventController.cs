@@ -95,17 +95,17 @@ namespace Backend3.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Rate(Guid EventId, int grage)
+        public async Task<IActionResult> Rate(GradeViewModel model)
         {
-            await _eventService.Rate(EventId, grage);
+            await _eventService.Rate(model.EventId, model.Grade);
             return RedirectToAction("Details");
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> PostReview(Guid EventId, string text)
+        public async Task<IActionResult> PostReview(ReviewViewModel model)
         {
             string userEmail = User.Identity.Name;
-            await _eventService.PostReview(EventId, text, userEmail);
+            await _eventService.PostReview(model.EventId, model.Text, userEmail);
             return RedirectToAction("Details");
         }
     }
