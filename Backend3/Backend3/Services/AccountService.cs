@@ -27,7 +27,7 @@ namespace Backend3.Services
             var user = await Get(id);
 
             bool isOwner = false;
-            if(user.FullName == email)
+            if(user.Email == email)
             {
                 isOwner = true;
             }
