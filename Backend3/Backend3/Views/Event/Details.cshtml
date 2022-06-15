@@ -1,4 +1,8 @@
 ﻿@model Backend3.Models.EventViewModel
+@using Backend3.Storage
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+
 @section Styles {
 <link href="~/css/EventDetails.css" rel="stylesheet" type="text/css" asp-append-version="true" />
 }
@@ -12,15 +16,16 @@
 
 <h6>Адрес встречи: <b>@Model.Place</b>, Дата встречи: @DateOfEvent, Стоимость: @Model.Price</h6>
 
+@if (User.IsInRole(ApplicationRoleNames.User))
+{
+    <div class="d-flex justify-content-start">
+        <button id="btn-buy-ticket" type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Купить билет</button>
 
-<div class="d-flex justify-content-start">
-    <button id="btn-buy-ticket" type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Купить билет</button>
-
-    <form method="post" asp-action="FindCompany" asp-route-id="@Model.Id" class="m-2">
-        <input type="submit" value="Найти компанию" class="btn btn-dark end-0" />
-    </form>
-</div>
-
+        <form method="post" asp-action="FindCompany" asp-route-id="@Model.Id" class="m-2">
+            <input type="submit" value="Найти компанию" class="btn btn-dark end-0" />
+        </form>
+    </div>
+}
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
