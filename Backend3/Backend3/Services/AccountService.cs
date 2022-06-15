@@ -41,18 +41,15 @@ namespace Backend3.Services
                 Avatar = user.Avatar,
                 Id = id,
                 IsOwner = isOwner,
-                UsersEvents = await GetEvents(id, user.Roles)
+                UsersEvents = await GetEvents(id)
             };
         }
-        private async Task<List<ShortEventViewModel>> GetEvents(Guid id, ICollection<UserRole> role)
+        private async Task<List<ShortEventViewModel>> GetEvents(Guid id)
         {
+            var roleId = (await _context.UserRoles.FirstOrDefaultAsync(x => x.UserId == id)).RoleId;
+
             IQueryable<Event> events;
-            if (role.Contains(
-                new UserRole
-                {
-                    RoleId = (await _context.Roles.FirstOrDefaultAsync(x => x.Name == "Организатор")).Id,
-                    UserId = id
-                }))
+            if ((await _context.Roles.FirstOrDefaultAsync(x => x.Name == "Организатор")).Id == roleId)
             {
                 var user = await Get(id);
                 events = _context.Event.Where(x => x.Organizer == user.Email);
