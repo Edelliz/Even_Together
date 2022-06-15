@@ -1,0 +1,57 @@
+﻿@model UserViewModel
+
+@{
+    String CorrectBirthDate = Model.BirthDate.Day + "." + Model.BirthDate.Month + "." + Model.BirthDate.Year;
+}
+
+<div class="row">
+    <div class="col-4">
+        @if (String.IsNullOrEmpty(@Model.Avatar))
+        {
+            <img id="user-@Model.Id" class="card-img-top h-100 p-3" src="/files/imgplaceholder.png" alt="Card image">
+        }
+        else
+        {
+            <img id="user-@Model.Id" class="card-img-top h-100 p-3"  src="@Model.Avatar" alt="Card image">
+        }
+    </div>
+    <div class="col-8">
+        <h4>@Model.Name</h4>
+        <h5>@Model.Email</h5>
+        <h6 class="mb-3">@CorrectBirthDate</h6>
+
+        <div class="btn btn-primary">Написать сообщение</div>
+    </div>
+</div>
+
+<h4>Мероприятия пользователя</h4>
+
+ <table class="w-100 h-100">
+        <tbody class="w-100">
+            @{
+                for (int i = 0; i < Model.UsersEvents.Count; i += 3)
+                {
+                    <tr class="row w-100 d-flex-column justify-content-between">
+                        @for (int j = i; j < Math.Min(i + 3, Model.UsersEvents.Count); j++)
+                        {
+                            <td class="col-4 cardsFeed p-3">
+                                <a asp-action="Details" asp-route-id="@Model.UsersEvents[j].Id" class="scale card w-100">
+                                    @if (String.IsNullOrEmpty(Model.UsersEvents[j].Poster))
+                                    {
+                                        <img id="event-@Model.UsersEvents[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
+                                    }
+                                    else
+                                    {
+                                        <img id="event-@Model.UsersEvents[j].Id" class="card-img-top h-100" src="/@Model.UsersEvents[j].Poster">
+                                    }
+                                    <div class="card-img-overlay h-100 ">
+                                        <h4 class="event-title card-title text-light rounded-pill p-2">@Model.UsersEvents[j].Title</h4>
+                                    </div>
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>

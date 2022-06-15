@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Backend3.Storage
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -14,7 +18,7 @@
     <header class="container">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 d-flex">
             <div class="container-fluid d-flex justify-content-between">
-                <a class="col-2 navbar-brand" asp-area="" asp-controller="Event" asp-action="Index">EventTogether</a>
+                <a class="col-2 navbar-brand" asp-area="" asp-controller="Event" asp-action="Index">EvenTogether</a>
                 <div class="input-group w-75 d-flex align-self-center justify-content-center row">
                     <div class="form-outline col-5 p-0">
                         <input type="search" id="form1" placeholder="Искать..." class="form-control rounded-pill bg-light">
@@ -43,7 +47,7 @@
                         else
                         {
                             <li class="nav-item m-1">
-                                @User.Identity.Name
+                                <a class="nav-link text-dark" asp-controller="User" asp-route-id="@UserManager.GetUserId(User)" asp-action="Details">@User.Identity.Name</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Выход</a>
