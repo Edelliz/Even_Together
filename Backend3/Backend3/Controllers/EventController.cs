@@ -93,5 +93,20 @@ namespace Backend3.Controllers
             await _eventService.BuyTicket(userEmail, id);
             return RedirectToAction("Details");
         }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Rate(Guid EventId, int grage)
+        {
+            await _eventService.Rate(EventId, grage);
+            return RedirectToAction("Details");
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> PostReview(Guid EventId, string text)
+        {
+            string userEmail = User.Identity.Name;
+            await _eventService.PostReview(EventId, text, userEmail);
+            return RedirectToAction("Details");
+        }
     }
 }
