@@ -46,4 +46,15 @@ namespace Backend3.Models
         public string Place { get; set; }
         public List<Review> Reviews { get; set; }
     }
+
+    public class GradeViewModel
+    {
+        public Guid EventId;
+        public int Grade;
+    }
+    public class ReviewViewModel
+    {
+        public Guid EventId;
+        public string Text;
+    }
 }
