@@ -1,4 +1,8 @@
 ﻿@model List<Backend3.Models.ShortEventViewModel>
+@using Backend3.Storage
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> UserManager;
+
 @section Styles {
 <link rel="stylesheet" href="~/css/EventIndex.css" asp-append-version="true" />
 }
@@ -38,7 +42,15 @@
         </button>
     </div>
 
-    <h3 class="float-start mt-4 mb-3"> Главные события недели</h3>
+    <div class="d-flex justify-content-between w-100">
+        <h3 class="float-start mt-4 mb-3"> Главные события недели</h3>
+
+        @if(User.IsInRole(ApplicationRoleNames.Organizer))
+        {
+            <a asp-action="Create" id="btn-create-event" type="button" class="btn btn-primary d-flex align-self-center mt-3 me-4">Создать мероприятие</a>
+        }
+    </div>
+    
 
     <table class="w-100 h-100">
         <tbody class="w-100">
