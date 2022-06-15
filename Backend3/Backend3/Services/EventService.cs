@@ -12,6 +12,8 @@ namespace Backend3.Services
         Task<CreateEventViewModel> GetEventView(Guid id);
         Task FindCompany(string email, Guid id);
         Task BuyTicket(string email, Guid id);
+        Task Rate(Guid id, int grade);
+        Task PostReview(Guid id, string text, string email);
         Task<List<ShortUserViewModel>> GetSearching(Guid eventId);
         Task<EventViewModel> GetEvent(Guid id, string userEmail);
     }
@@ -27,7 +29,7 @@ namespace Backend3.Services
             _context = context;
             _environment = environment;
         }
-       
+
 
         public async Task ChangeEvent(CreateEventViewModel model)
         {
@@ -69,13 +71,13 @@ namespace Backend3.Services
             await _context.SaveChangesAsync();
         }
 
-        
+
         public async Task<EventViewModel> GetEvent(Guid id, string userEmail)
         {
             var ev = await Get(id);
 
             bool isOWner = false;
-            if(ev.Organizer == userEmail)
+            if (ev.Organizer == userEmail)
             {
                 isOWner = true;
             }
@@ -133,11 +135,11 @@ namespace Backend3.Services
                     Poster = x.Poster
                 }).ToListAsync();
             }
-            
+
             return ev;
         }
 
-        
+
 
         public async Task<CreateEventViewModel> GetEventView(Guid id)
         {
@@ -156,7 +158,7 @@ namespace Backend3.Services
         {
             var searchings = await _context.Searching.Where(x => x.EventId == eventId).ToListAsync();
             List<ShortUserViewModel> people = new List<ShortUserViewModel>();
-            foreach(var search in searchings)
+            foreach (var search in searchings)
             {
                 var human = await _context.Users.FirstOrDefaultAsync(x => x.Id == search.UserId);
                 people.Add(new ShortUserViewModel
@@ -212,6 +214,28 @@ namespace Backend3.Services
                 }
             }
             return fileNameWithPath;
+        }
+
+        public async Task Rate(Guid id, int grade)
+        {
+            var ev = await Get(id);
+            ev.Grade += grade;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task PostReview(Guid id, string text, string email)
+        {
+            var review = await _context.Review.FirstOrDefaultAsync(x => x.EventId == id);
+
+            review = new Review
+            {
+                EventId = id,
+                Text = text,
+                Date = DateTime.Now,
+                Owner = await GetUser(email)
+            };
+            await _context.AddAsync(review);
+            await _context.SaveChangesAsync();
         }
     }
 }

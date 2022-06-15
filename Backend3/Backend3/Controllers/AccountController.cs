@@ -1,5 +1,6 @@
 ﻿using Backend3.Models;
 using Backend3.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend3.Controllers
@@ -62,6 +63,7 @@ namespace Backend3.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _usersService.Logout();

@@ -1,5 +1,6 @@
 ﻿using Backend3.Models;
 using Backend3.Storage;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend3.Services
@@ -14,9 +15,10 @@ namespace Backend3.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly UserManager<User> _userManager;
 
         private static string[] AllowedExtensions { get; set; } = { "jpg", "jpeg", "png" };
-        public AccountService(ApplicationDbContext context, IWebHostEnvironment environment)
+        public AccountService(ApplicationDbContext context, IWebHostEnvironment environment, UserManager<User> userManager)
         {
             _context = context;
             _environment = environment;
@@ -27,11 +29,10 @@ namespace Backend3.Services
             var user = await Get(id);
 
             bool isOwner = false;
-            if(user.FullName == email)
+            if(user.Email == email)
             {
                 isOwner = true;
             }
-
             return new UserViewModel
             {
                 Name = user.FullName,
@@ -45,8 +46,20 @@ namespace Backend3.Services
         }
         private async Task<List<ShortEventViewModel>> GetEvents(Guid id)
         {
-            var usersEvent = _context.UsersEvents.Where(x => x.UserId == id);
-            var events = _context.Event.Where(x => usersEvent.Any(y => y.EventId == x.Id));
+            var roleId = (await _context.UserRoles.FirstOrDefaultAsync(x => x.UserId == id)).RoleId;
+
+            IQueryable<Event> events;
+            if ((await _context.Roles.FirstOrDefaultAsync(x => x.Name == "Организатор")).Id == roleId)
+            {
+                var user = await Get(id);
+                events = _context.Event.Where(x => x.Organizer == user.Email);
+            }
+            else
+            {
+                var usersEvent = _context.UsersEvents.Where(x => x.UserId == id);
+                events = _context.Event.Where(x => usersEvent.Any(y => y.EventId == x.Id));
+            }
+           
             
             return await events.Select(x => new ShortEventViewModel
             {
