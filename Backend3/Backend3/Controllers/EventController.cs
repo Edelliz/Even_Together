@@ -72,7 +72,7 @@ namespace Backend3.Controllers
             }
 
             await _eventService.ChangeEvent(model);
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", new { model.Id });
         }
 
         [HttpPost]
@@ -81,7 +81,7 @@ namespace Backend3.Controllers
         {
             string userEmail = User.Identity.Name;
             await _eventService.FindCompany(userEmail, id);
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", new { id });
         }
 
 
@@ -91,14 +91,14 @@ namespace Backend3.Controllers
         {
             string userEmail = User.Identity.Name;
             await _eventService.BuyTicket(userEmail, id);
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", new { id });
         }
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Rate(GradeViewModel model)
         {
             await _eventService.Rate(model.EventId, model.Grade);
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", new { model.EventId });
         }
         [HttpPost]
         [Authorize]
@@ -106,7 +106,7 @@ namespace Backend3.Controllers
         {
             string userEmail = User.Identity.Name;
             await _eventService.PostReview(model.EventId, model.Text, userEmail);
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", "Event", new { id = model.EventId });
         }
     }
 }

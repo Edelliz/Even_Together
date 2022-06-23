@@ -27,6 +27,15 @@
     </div>
 }
 
+else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserName(User) == Model.Organizer)
+{
+    <div class="d-flex justify-content-start">
+        <a id="btn-buy-ticket" asp-action="Edit" asp-route-id="@Model.Id">Редактировать мероприятие</a>
+    </div>
+}
+
+
+
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -74,7 +83,7 @@
                 </li>
             </ul>
         </div>
-        <form class="card-body tab-content">
+        <div class="card-body tab-content">
             <div class="tab-pane active" id="info-event">
                 <p class="card-text">@Model.Description</p>
             </div>
@@ -108,48 +117,33 @@
                         }
                     </tbody>
                 </table>
-
-
             </div>
             <div class="tab-pane" id="review-event">
-
-                <form method="post" asp-action="">
+                <form method="post" asp-action="PostReview">
                     <input name="Text" class="form-control inputFields" />
-                    <input name="PostId" value="@Model.Id" class="form-control border-2 border-dark" type="hidden" />
+                    <input name="EventId" value="@Model.Id" class="form-control border-2 border-dark" type="hidden" />
                     <div class="form-group mt-3 w-100 text-end">
                         <input type="submit" value="Комментировать" class="btnAddComment btn btn-dark end-0" />
                     </div>
                 </form>
 
-
-
-                @*<div class="blog-posts">
+                <div class="blog-posts">
                     <div class="blog-posts-items">
-                    @foreach (var item in Model.Comments.OrderByDescending(x => x.Created))
-                    {
-                    <div class="blog-post panel panel-default rounded bg-light border border-2 border-dark mt-3 ">
-                    <div class="panel-heading inputFields border-bottom border-1 border-dark  ps-2 pt-1 pb-1 w-100 d-flex flex-row justify-content-between">
-                    <div class="text-dark ps-2">@item.User.UserName | @item.Created</div>
-                    <div class="text-end text-dark pe-3">
-                    @if (UserPermissions.CanEditPostComment(item))
-                    {
-                    <form method="post" asp-action="DeleteComment" asp-controller="Posts" asp-route-id="@item.Id">
-                    <div class="form-actions no-color">
-                    <input type="submit" value="Удалить" />
+                        @foreach (var item in Model.Reviews.OrderByDescending(x => x.Date))
+                        {
+                            <div class="blog-post panel panel-default rounded bg-light border border-2 border-dark mt-3 ">
+                                <div class="panel-heading inputFields border-bottom border-1 border-dark  ps-2 pt-1 pb-1 w-100 d-flex flex-row justify-content-between">
+                                    <div class="text-dark ps-2">@item.Owner.Email | @item.Date</div>
+                                </div>
+                                <div class="panel-body inputFields pt-2 pb-2 ps-4 ">
+                                    <div class="blog-post-text inputFields text-dark">@item.Text</div>
+                                </div>
+                            </div>
+                        }
                     </div>
-                    </form>
-                    }
-                    </div>
-                    </div>
-                    <div class="panel-body inputFields pt-2 pb-2 ps-4 ">
-                    <div class="blog-post-text inputFields text-dark">@item.Text</div>
-                    </div>
-                    </div>
-                    }
-                    </div>
-                    </div>*@
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 

@@ -54,7 +54,9 @@ namespace Backend3.Models
     }
     public class ReviewViewModel
     {
-        public Guid EventId;
-        public string Text;
+        [Required]
+        public Guid EventId { get; set; }
+        [Required]
+        public string Text { get; set; }
     }
 }

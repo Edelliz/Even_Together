@@ -67,13 +67,6 @@ namespace Backend3.Storage
                 .HasPrincipalKey(x => x.Id)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<Event>().HasKey(x => x.Id);
-            builder.Entity<Review>()
-                .HasNoKey()
-                .HasOne<Event>()
-                .WithMany()
-                .HasForeignKey(x => x.EventId)
-                .HasPrincipalKey(x => x.Id)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

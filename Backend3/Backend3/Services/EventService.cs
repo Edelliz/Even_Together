@@ -100,7 +100,7 @@ namespace Backend3.Services
         }
         public async Task<List<Review>> GetReviews(Guid id)
         {
-            return await _context.Review.Where(x => x.EventId == id).ToListAsync();
+            return await _context.Review.Include(x => x.Owner).Where(x => x.EventId == id).ToListAsync();
         }
         private async Task<Event> Get(Guid? id)
         {

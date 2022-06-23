@@ -49,7 +49,7 @@ namespace Backend3.Controllers
             }
 
             await _accountService.Edit(model);
-            return RedirectToAction("Details");
+            return RedirectToAction("Details", new {model.Id});
         }
     }
 }
