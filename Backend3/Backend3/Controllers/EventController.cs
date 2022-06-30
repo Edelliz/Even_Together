@@ -100,13 +100,13 @@ namespace Backend3.Controllers
             await _eventService.Rate(model.EventId, model.Grade);
             return RedirectToAction("Details", new { model.EventId });
         }
-      /*  [HttpPost]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> PostReview(ReviewViewModel model)
         {
             string userEmail = User.Identity.Name;
             await _eventService.PostReview(model.EventId, model.Text, userEmail);
             return RedirectToAction("Details", "Event", new { id = model.EventId });
-        }*/
+        }
     }
 }

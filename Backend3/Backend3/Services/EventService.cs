@@ -13,7 +13,7 @@ namespace Backend3.Services
         Task FindCompany(string email, Guid id);
         Task BuyTicket(string email, Guid id);
         Task Rate(Guid id, int grade);
-        //Task PostReview(Guid id, string text, string email);
+        Task PostReview(Guid id, string text, string email);
         Task<List<ShortUserViewModel>> GetSearching(Guid eventId);
         Task<EventViewModel> GetEvent(Guid id, string userEmail);
         Task<List<ShortUserViewModel>> GetMembers(Guid id);
@@ -97,7 +97,7 @@ namespace Backend3.Services
                 Searching = await GetSearching(id),
                 Grade = ev.Grade,
                 Place = ev.Place,
-               // Reviews = await GetReviews(id),
+                Reviews = await GetReviews(id),
                 Groups = await GetGroup(id),
             };
         }
@@ -150,10 +150,10 @@ namespace Backend3.Services
             return membersViewModels;
         }
 
-        /*public async Task<List<Review>> GetReviews(Guid id)
+        public async Task<List<Review>> GetReviews(Guid id)
         {
             return await _context.Review.Include(x => x.Owner).Where(x => x.EventId == id).ToListAsync();
-        }*/
+        }
         private async Task<Event> Get(Guid? id)
         {
             var ev = await _context.Event.FirstOrDefaultAsync(x => x.Id == id);
@@ -275,7 +275,7 @@ namespace Backend3.Services
             await _context.SaveChangesAsync();
         }
 
-       /* public async Task PostReview(Guid id, string text, string email)
+       public async Task PostReview(Guid id, string text, string email)
         {
             var review = await _context.Review.FirstOrDefaultAsync(x => x.EventId == id);
 
@@ -288,6 +288,6 @@ namespace Backend3.Services
             };
             await _context.AddAsync(review);
             await _context.SaveChangesAsync();
-        }*/
+        }
     }
 }
