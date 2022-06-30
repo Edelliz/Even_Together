@@ -12,6 +12,8 @@ namespace Backend3.Services
         Task SendInvitation(string email, Guid userId, Guid eventId);
         Task AcceptInvitation(Guid groupId, string email);
         Task AcceptRequest(string email, Guid userId, Guid groupId);
+        Task RefuseRequest(string email, Guid userId, Guid groupId);
+        Task RefuseInvitation(Guid groupId, string email);
     }
     public class GroupService : IGroupService
     {
@@ -112,6 +114,33 @@ namespace Backend3.Services
             };
             await _context.AddAsync(memder);
             var request = _context.Request.FirstOrDefault(x => x.GroupId == groupId && x.UserId == memder.UserId);
+            _context.Request.Remove(request);
+
+            await _context.SaveChangesAsync();
+        }
+
+         public async Task RefuseInvitation(Guid groupId, string email)
+        {
+            var group = await _context.Group.FirstOrDefaultAsync(x => x.Id == groupId);
+            if (group == null)
+            {
+                throw new Exception();
+            }
+            var userId = (await _userManager.FindByEmailAsync(email)).Id;
+            var invite = _context.Invitations.FirstOrDefault( x => x.GroupId == groupId && x.UserId == userId);
+            _context.Invitations.Remove(invite);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RefuseRequest(string email, Guid userId, Guid groupId)
+        {
+            var group = await _context.Group.FirstOrDefaultAsync(x => x.Id == groupId && x.Owner == email);
+            if (group == null)
+            {
+                throw new Exception();
+            }
+            var request = _context.Request.FirstOrDefault(x => x.GroupId == groupId && x.UserId == userId);
             _context.Request.Remove(request);
 
             await _context.SaveChangesAsync();

@@ -66,5 +66,22 @@ namespace Backend3.Controllers
             await _groupService.AcceptInvitation(groupId, userEmail);
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RefuseRequest(Guid groupId, Guid userId)
+        {
+            string userEmail = User.Identity.Name;
+            await _groupService.RefuseRequest(userEmail, userId, groupId);
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> RefuseInvitation(Guid groupId)
+        {
+            string userEmail = User.Identity.Name;
+            await _groupService.RefuseInvitation(groupId, userEmail);
+            return RedirectToAction("Index");
+        }
     }
 }
