@@ -44,7 +44,7 @@ namespace Backend3.Models
         public List<ShortUserViewModel> Searching { get; set; }
         public int Grade { get; set; }
         public string Place { get; set; }
-        public List<Review> Reviews { get; set; }
+       //public List<Review> Reviews { get; set; }
         public List<GroupViewModel> Groups { get; set; } 
     }
 

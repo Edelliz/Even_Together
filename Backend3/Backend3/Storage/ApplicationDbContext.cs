@@ -11,7 +11,7 @@ namespace Backend3.Storage
         public override DbSet<User> Users { get; set; }
         public override DbSet<Role> Roles { get; set; }
         public DbSet<Event> Event { get; set; }
-        public DbSet<Review> Review { get; set; }
+        //public DbSet<Review> Review { get; set; }
         public DbSet<Searching> Searching { get; set; }
         public DbSet<UsersEvents> UsersEvents { get; set; }
         public DbSet<Group> Group { get; set; }
