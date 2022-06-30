@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Backend3.Storage;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend3.Models
 {
@@ -14,6 +15,7 @@ namespace Backend3.Models
         public DateTime BirthDate { get; set; }
         public bool IsOwner { get; set; }
         public List<ShortEventViewModel> UsersEvents { get; set; }
+        public List<GroupViewModel> Invitations { get; set; }
     }
     public class EditUserViewModel
     {

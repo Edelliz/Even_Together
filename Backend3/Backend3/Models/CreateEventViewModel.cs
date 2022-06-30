@@ -45,6 +45,7 @@ namespace Backend3.Models
         public int Grade { get; set; }
         public string Place { get; set; }
         public List<Review> Reviews { get; set; }
+        public List<GroupViewModel> Groups { get; set; } 
     }
 
     public class GradeViewModel
