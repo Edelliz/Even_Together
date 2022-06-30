@@ -14,6 +14,10 @@ namespace Backend3.Storage
         public DbSet<Review> Review { get; set; }
         public DbSet<Searching> Searching { get; set; }
         public DbSet<UsersEvents> UsersEvents { get; set; }
+        public DbSet<Group> Group { get; set; }
+        public DbSet<Member> Member { get; set; }
+        public DbSet<Request> Request { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
         public override DbSet<UserRole> UserRoles { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -41,6 +45,11 @@ namespace Backend3.Storage
             builder.Entity<User>().HasKey(x => x.Id);
             builder.Entity<UsersEvents>().HasKey(u => new { u.EventId, u.UserId });
             builder.Entity<Searching>().HasKey(u => new { u.EventId, u.UserId });
+
+            builder.Entity<Request>().HasKey(u => new { u.GroupId, u.UserId });
+            builder.Entity<Invitation>().HasKey(u => new { u.GroupId, u.UserId });
+            builder.Entity<Member>().HasKey(u => new { u.GroupId, u.UserId });
+
             builder.Entity<UsersEvents>()
                 .HasOne<User>()
                 .WithMany()
