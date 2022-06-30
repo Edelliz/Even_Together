@@ -50,5 +50,21 @@ namespace Backend3.Controllers
             await _groupService.SendRequest(userEmail, groupId);
             return RedirectToAction("Index");
         }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AcceptRequest(Guid groupId, Guid userId)
+        {
+            string userEmail = User.Identity.Name;
+            await _groupService.AcceptRequest(userEmail, userId, groupId);
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AcceptInvitation(Guid groupId)
+        {
+            string userEmail = User.Identity.Name;
+            await _groupService.AcceptInvitation(groupId, userEmail);
+            return RedirectToAction("Index");
+        }
     }
 }

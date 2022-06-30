@@ -16,6 +16,8 @@ namespace Backend3.Services
         Task PostReview(Guid id, string text, string email);
         Task<List<ShortUserViewModel>> GetSearching(Guid eventId);
         Task<EventViewModel> GetEvent(Guid id, string userEmail);
+        Task<List<ShortUserViewModel>> GetMembers(Guid id);
+        Task<List<ShortUserViewModel>> GetRequests(Guid id);
     }
     public class EventService : IEventService
     {
@@ -95,9 +97,59 @@ namespace Backend3.Services
                 Searching = await GetSearching(id),
                 Grade = ev.Grade,
                 Place = ev.Place,
-                Reviews = await GetReviews(id)
+                Reviews = await GetReviews(id),
+                Groups = await GetGroup(id),
             };
         }
+        public async Task<List<GroupViewModel>> GetGroup(Guid id)
+        {
+            var groups = _context.Group.Where(g => g.EventId == id).ToList();
+            List<GroupViewModel> groupViewModels = new List<GroupViewModel>();
+            foreach(var group in groups)
+            {
+                groupViewModels.Add(new GroupViewModel
+                {
+                    Id = group.Id,
+                    Title = group.Title,
+                    Description = group.Description,
+                    Users = await GetMembers(group.Id),
+                    Requests = await GetRequests(group.Id),
+                    Size = group.Size,
+                });
+            }
+            return groupViewModels;
+        }
+        public async Task<List<ShortUserViewModel>> GetRequests(Guid id)
+        {
+            var users = _context.Request.Where(x => x.GroupId == id);
+            List<ShortUserViewModel> requestViewModels = new List<ShortUserViewModel>();
+            foreach (var user in users)
+            {
+                requestViewModels.Add(new ShortUserViewModel
+                {
+                    Id = user.UserId,
+                    Name = user.User.FullName,
+                    Avatar = user.User.Avatar
+                });
+            }
+            return requestViewModels;
+        }
+        public async Task<List<ShortUserViewModel>> GetMembers(Guid id)
+        {
+            var users = _context.Member.Where(x => x.GroupId == id);
+            List<ShortUserViewModel> membersViewModels = new List<ShortUserViewModel>();
+            foreach(var user in users)
+            {
+                membersViewModels.Add(new ShortUserViewModel
+                {
+                    Id = user.UserId,
+                    Name = user.User.FullName,
+                    Avatar = user.User.Avatar
+                });
+            }
+            return membersViewModels;
+        }
+
         public async Task<List<Review>> GetReviews(Guid id)
         {
             return await _context.Review.Include(x => x.Owner).Where(x => x.EventId == id).ToListAsync();

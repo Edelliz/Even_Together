@@ -16,12 +16,14 @@ namespace Backend3.Services
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
         private readonly UserManager<User> _userManager;
+        private readonly IEventService _eventService;
 
         private static string[] AllowedExtensions { get; set; } = { "jpg", "jpeg", "png" };
-        public AccountService(ApplicationDbContext context, IWebHostEnvironment environment, UserManager<User> userManager)
+        public AccountService(ApplicationDbContext context, IWebHostEnvironment environment, UserManager<User> userManager, IEventService eventService)
         {
             _context = context;
             _environment = environment;
+            _eventService = eventService;
         }
 
         public async Task<UserViewModel> GetUser(Guid id, string email)
@@ -41,8 +43,27 @@ namespace Backend3.Services
                 Avatar = user.Avatar,
                 Id = id,
                 IsOwner = isOwner,
-                UsersEvents = await GetEvents(id)
+                UsersEvents = await GetEvents(id),
+                Invitations = await GetInvitations(id)
             };
+        }
+        public async Task<List<GroupViewModel>> GetInvitations(Guid id)
+        {
+            var invitations = _context.Invitations.Where(x => x.UserId == id);
+            List<GroupViewModel> GroupViewModel = new List<GroupViewModel>();
+            foreach (var invite in invitations)
+            {
+                GroupViewModel.Add(new GroupViewModel
+                {
+                    Id = invite.GroupId,
+                    Title = invite.Group.Title,
+                    Description = invite.Group.Description,
+                    Users = await _eventService.GetMembers(invite.GroupId),
+                    Requests = await _eventService.GetRequests(invite.GroupId),
+                    Size = invite.Group.Size,
+                });
+            }
+            return GroupViewModel;
         }
         private async Task<List<ShortEventViewModel>> GetEvents(Guid id)
         {
