@@ -49,6 +49,16 @@
         {
             <a asp-action="Create" id="btn-create-event" type="button" class="btn btn-primary d-flex align-self-center mt-3 me-4">Создать мероприятие</a>
         }
+         <form asp-action="Index"  enctype="multipart/form-data">
+            <div class="form-group">
+                <label name="date" class="control-label">Дата мероприятия</label>
+                <input name="date"  type="date" class="form-control" />
+            </div>
+            <div class="form-group">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <button type="submit" class="btn btn-outline-primary  mt-3">Найти</button>
+            </div>
+        </form>
     </div>
     
 
