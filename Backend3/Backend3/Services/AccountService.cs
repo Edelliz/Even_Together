@@ -44,12 +44,40 @@ namespace Backend3.Services
                 Id = id,
                 IsOwner = isOwner,
                 UsersEvents = await GetEvents(id),
-                Invitations = await GetInvitations(id)
+                Invitations = await GetInvitations(id),
+                Requests = await GetRequestsUser(id)
             };
+        }
+
+        public async Task<List<GroupViewModel>> GetRequestsUser(Guid id)
+        {
+            var user = _context.Users.Find(id);
+            var groups = _context.Group.Where(x => x.Owner == user.Email);
+            List<GroupViewModel> GroupViewModel = new List<GroupViewModel>();
+            foreach (var group in groups)
+            {
+                var requests = _context.Request.Include(x => x.Group).Where(x => x.GroupId == group.Id);
+                
+                foreach (var request in requests)
+                {
+                    GroupViewModel.Add(new GroupViewModel
+                    {
+                        Id = request.GroupId,
+                        Title = request.Group.Title,
+                        Description = request.Group.Description,
+                        Owner = request.Group.Owner,
+                        Users = await _eventService.GetMembers(request.GroupId),
+                        Requests = await _eventService.GetRequests(request.GroupId),
+                        Size = request.Group.Size,
+                    });
+                }
+            }
+           
+            return GroupViewModel;
         }
         public async Task<List<GroupViewModel>> GetInvitations(Guid id)
         {
-            var invitations = _context.Invitations.Where(x => x.UserId == id);
+            var invitations = _context.Invitations.Include(x => x.Group).Where(x => x.UserId == id);
             List<GroupViewModel> GroupViewModel = new List<GroupViewModel>();
             foreach (var invite in invitations)
             {
@@ -58,6 +86,7 @@ namespace Backend3.Services
                     Id = invite.GroupId,
                     Title = invite.Group.Title,
                     Description = invite.Group.Description,
+                    Owner = request.Group.Owner,
                     Users = await _eventService.GetMembers(invite.GroupId),
                     Requests = await _eventService.GetRequests(invite.GroupId),
                     Size = invite.Group.Size,

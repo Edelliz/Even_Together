@@ -111,6 +111,7 @@ namespace Backend3.Services
                 {
                     Id = group.Id,
                     Title = group.Title,
+                    Owner = group.Owner,
                     Description = group.Description,
                     Users = await GetMembers(group.Id),
                     Requests = await GetRequests(group.Id),
@@ -121,7 +122,7 @@ namespace Backend3.Services
         }
         public async Task<List<ShortUserViewModel>> GetRequests(Guid id)
         {
-            var users = _context.Request.Where(x => x.GroupId == id);
+            var users = _context.Request.Include(x => x.User).Where(x => x.GroupId == id);
             List<ShortUserViewModel> requestViewModels = new List<ShortUserViewModel>();
             foreach (var user in users)
             {

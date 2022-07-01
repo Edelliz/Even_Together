@@ -66,6 +66,38 @@
                     </tbody>
                 </table>
 
+                
+<h4>Завяки в группу</h4>
+ <table class="w-100 h-100">
+                    <tbody class="w-100">
+                        @{
+                            for (int i = 0; i < Model.Invitations.Count; i += 3)
+                            {
+                                <tr class="row w-100 d-flex-column justify-content-between">
+                                    @for (int j = i; j < Math.Min(i + 3, Model.Invitations.Count); j++)
+                                    {
+                                        <td class="col-4 cardsFeed p-3">
+                                            <a class="scale card w-100">
+                                                <img id="user-@Model.Invitations[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
+                                                <div class="card-img-overlay h-100 ">
+                                                    <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Invitations[j].Title</h4>
+                                                      <form method="post" asp-controller="Group" asp-action="RefuseInvitation" asp-route-groupId="@Model.Invitations[j].Id" class="m-2">
+                                                    <input type="submit" value="Отказаться" class="btn end-0" />
+                                                </form>
+                                                <form method="post" asp-controller="Group" asp-action="AcceptInvitation" asp-route-groupId="@Model.Invitations[j].Id" class="m-2">
+                                                    <input type="submit" value="Принять заявку" class="btn  end-0" />
+                                                </form>
+                                                </div>
+                                            </a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+
 <h4>Мероприятия пользователя</h4>
 
 <table class="w-100 h-100">

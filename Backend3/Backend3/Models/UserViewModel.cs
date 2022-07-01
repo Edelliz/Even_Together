@@ -16,6 +16,7 @@ namespace Backend3.Models
         public bool IsOwner { get; set; }
         public List<ShortEventViewModel> UsersEvents { get; set; }
         public List<GroupViewModel> Invitations { get; set; }
+        public List<GroupViewModel> Requests { get; set; }
     }
     public class EditUserViewModel
     {
