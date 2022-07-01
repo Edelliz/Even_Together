@@ -7,9 +7,12 @@
 <link href="~/css/EventDetails.css" rel="stylesheet" type="text/css" asp-append-version="true" />
 }
 
+
+
 @{
     String DateOfEvent = @Model.Date.Day + "." + @Model.Date.Month + "." + @Model.Date.Year + " " + @Model.Date.Hour + ":" + @Model.Date.Minute;
     ViewData["Title"] = "Details";
+
 }
 
 <h3>@Model.Title</h3>
@@ -24,6 +27,10 @@
         <form method="post" asp-action="FindCompany" asp-route-id="@Model.Id" class="m-2">
             <input type="submit" value="Найти компанию" class="btn btn-dark end-0" />
         </form>
+
+        <button id="btn-buy-ticket" type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#createGroupModal">Создать группу</button>
+
+
     </div>
 }
 
@@ -34,7 +41,42 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
     </div>
 }
 
+<div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createGroupModalLabel">Заполните информацию о вашей группе</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-4">
+                        <form asp-action="Create" asp-controller="Group" asp-route-eventId="@Model.Id" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label name="Title" class="control-label">Название</label>
+                                <input name="Title" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label name="Description" class="control-label">Описание</label>
+                                <input name="Description" class="form-control" />
+                            </div>
 
+                            <div class="form-group">
+                                <label name="Size" class="control-label">Размер группы</label>
+                                <input name="Size" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <button type="submit" class="btn btn-outline-primary  mt-3">Создать</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -76,7 +118,10 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                     <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#info-event"><b>Информация о мероприятии</b></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#participants-event"><b>Искатели</b></a>
+                    <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#participants-event"><b>Люди, ищущие компанию</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#groups-event"><b>Группы</b></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" href="#review-event"><b>Отзывы</b></a>
@@ -91,33 +136,84 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                 <table class="w-100 h-100">
                     <tbody class="w-100">
                         @{
-                            for (int i = 0; i < Model.Searching.Count; i += 3)
+                            foreach (ShortUserViewModel user in Model.Searching)
                             {
-                                <tr class="row w-100 d-flex-column justify-content-between">
-                                    @for (int j = i; j < Math.Min(i + 3, Model.Searching.Count); j++)
-                                    {
-                                        <td class="col-4 cardsFeed p-3">
-                                            <a asp-controller="User" asp-action="Details" asp-route-id="@Model.Searching[j].Id" class="scale card w-100">
-                                                @if (String.IsNullOrEmpty(Model.Searching[j].Avatar))
+                                <tr class="row w-100">
+                                    <td class="col-4 cardsFeed p-3 bg-light rounded w-100">
+                                        <div class="scale card w-100 d-flex flex-row align-items-baseline justify-content-between">
+                                            <div class="d-flex flex-row">
+                                                @if (String.IsNullOrEmpty(user.Avatar))
                                                 {
-                                                    <img id="user-@Model.Searching[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
+                                                    <img id="user-@user.Id" class="short-users-avatar" src="/files/imgplaceholder.png">
                                                 }
                                                 else
                                                 {
-                                                    <img id="user-@Model.Searching[j].Id" class="card-img-top h-100" src="@Model.Searching[j].Avatar">
+                                                    <img id="user-@user.Id" class="short-users-avatar" src="/@user.Avatar">
                                                 }
-                                                <div class="card-img-overlay h-100 ">
-                                                    <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Searching[j].Name</h4>
-                                                </div>
-                                            </a>
-                                        </td>
-                                    }
+                                                <a asp-controller="User" asp-action="Details" asp-route-id="@user.Id" class="h-100 d-flex align-self-center">
+                                                    <h4 class="event-title card-title text-dark rounded-pill p-2">@user.Name</h4>
+                                                </a>
+                                            </div>
+                                            @if (UserManager.GetUserId(User) != user.Id.ToString() && ViewBag.UserGroup != null)
+                                            {
+                                                if ((ViewBag.UserGroup as Group).Invitations.Any(x => x.UserId == user.Id))
+                                                {
+                                                    
+                                                    var groupId = (ViewBag.UserGroup as Group).Id;
+
+                                                    <form method="post" asp-controller="Group" asp-route-id="@Model.Id" asp-route-groupId="@groupId" asp-route-userId="@user.Id" asp-action="CancelInvitation">
+
+                                                            <input type="submit" value="Отменить приглашение" class="me-3 d-flex align-self-center btn btn-danger text-light" />
+                                                    
+                                                    </form>
+
+                                                }
+                                                else
+                                                {
+                                                    <form method="post" asp-controller="Group" asp-action="SendInvitation">
+                                                        <input name="userId" value="@user.Id" class="form-control" type="hidden" />
+                                                        <input name="id" value="@Model.Id" class="form-control border-2 border-dark" type="hidden" />
+                                                        <div class="form-group mt-3 w-100 text-end">
+                                                            <input type="submit" value="Пригласить в группу" class="me-3 d-flex align-self-center btn btn-primary text-light" />
+                                                        </div>
+                                                    </form>
+
+                                                }
+
+                                            }
+                                        </div>
+
+                                    </td>
                                 </tr>
                             }
                         }
                     </tbody>
                 </table>
             </div>
+
+
+            <div class="tab-pane" id="groups-event">
+                <table class="w-100 h-100">
+                    <tbody class="w-100">
+                        @foreach (GroupViewModel group in Model.Groups)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => group.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => group.Description)
+                                </td>
+                                <td>
+                                    <a asp-action="SendRequest" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">Присоединиться</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
             <div class="tab-pane" id="review-event">
                 <form method="post" asp-action="PostReview">
                     <input name="Text" class="form-control inputFields" />

@@ -16,3 +16,17 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.users-avatar {
+    border-radius: 200px;
+    box-shadow: 0 0 7px #666;
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.short-users-avatar {
+    border-radius: 50px;
+    box-shadow: 0 0 7px #666;
+    max-width: 150px;
+    max-height: 100px;
+}

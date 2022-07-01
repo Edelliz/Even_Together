@@ -4,7 +4,7 @@ namespace Backend3.Storage
 {
     public class Group
     {
-        public Guid Id { get; set; } = new Guid();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid EventId { get; set; }
         public string Owner { get; set; }
         public string Title { get; set; }

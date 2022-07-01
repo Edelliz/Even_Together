@@ -1,6 +1,8 @@
 ﻿using Backend3.Models;
 using Backend3.Services;
+using Backend3.Storage;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend3.Controllers
@@ -8,9 +10,14 @@ namespace Backend3.Controllers
     public class GroupController : Controller
     {
         private readonly IGroupService _groupService;
-        public GroupController(IGroupService groupService)
+        private readonly UserManager<User> _userManager;
+        private readonly ApplicationDbContext _context;
+
+        public GroupController(IGroupService groupService, UserManager<User> userManager, ApplicationDbContext context)
         {
             _groupService = groupService;
+            _userManager = userManager;
+            _context = context;
         }
 
 
@@ -26,21 +33,23 @@ namespace Backend3.Controllers
         [Authorize]
         public async Task<IActionResult> Create(CreateGroupViewModel model, Guid eventId)
         {
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            string userEmail = User.Identity.Name;
-            await _groupService.Create(model, userEmail, eventId);
+            var user = await _userManager.GetUserAsync(User);
+
+            await _groupService.Create(model, user, eventId);
             return RedirectToAction("Index");
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> SendInvitation(Guid eventId, Guid userId)
+        public async Task<IActionResult> SendInvitation(Guid id, Guid userId)
         {
             string userEmail = User.Identity.Name;
-            await _groupService.SendInvitation(userEmail, userId, eventId);
-            return RedirectToAction("Index");
+            await _groupService.SendInvitation(userEmail, userId, id);
+            return RedirectToAction("Details","Event", new { id });
         }
         [HttpPost]
         [Authorize]
@@ -82,6 +91,17 @@ namespace Backend3.Controllers
             string userEmail = User.Identity.Name;
             await _groupService.RefuseInvitation(groupId, userEmail);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CancelInvitation(Guid groupId, Guid userId, Guid id)
+        {
+            var invitation = _context.Invitations.FirstOrDefault(x => x.GroupId == groupId && x.UserId == userId);
+            _context.Invitations.Remove(invitation);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Event", new {id });
         }
     }
 }

@@ -24,6 +24,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
 
 var app = builder.Build();
 

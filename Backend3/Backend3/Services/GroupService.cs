@@ -7,7 +7,7 @@ namespace Backend3.Services
 {
     public interface IGroupService
     {
-        Task Create(CreateGroupViewModel model, string email, Guid eventId);
+        Task Create(CreateGroupViewModel model, User user, Guid eventId);
         Task SendRequest(string email, Guid groupId);
         Task SendInvitation(string email, Guid userId, Guid eventId);
         Task AcceptInvitation(Guid groupId, string email);
@@ -26,10 +26,9 @@ namespace Backend3.Services
             _userManager = userManager;
         }
 
-        public async Task Create(CreateGroupViewModel model, string email, Guid eventId)
-        {
-           
-            var groupUser = await _context.Group.FirstOrDefaultAsync(x => x.EventId == eventId && x.Owner == email);
+        public async Task Create(CreateGroupViewModel model, User user, Guid eventId)
+        {          
+            var groupUser = await _context.Group.FirstOrDefaultAsync(x => x.EventId == eventId && x.Owner == user.Email);
             if(groupUser != null)
             {
                 throw new Exception();
@@ -40,13 +39,15 @@ namespace Backend3.Services
                 Title = model.Title,
                 Description = model.Description,
                 Size = model.Size,
-                Owner = email,
+                Owner = user.Email,
                 EventId = eventId
             };
+
+            
             var memder = new Member
             {
                 GroupId = group.Id,
-                UserId = (await _userManager.FindByEmailAsync(email)).Id
+                UserId = user.Id
             };
 
             await _context.AddAsync(memder);

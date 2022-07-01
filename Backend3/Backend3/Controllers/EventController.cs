@@ -1,16 +1,21 @@
 ﻿using Backend3.Models;
 using Backend3.Services;
+using Backend3.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend3.Controllers
 {
     public class EventController : Controller
     {
         private readonly IEventService _eventService;
-        public EventController(IEventService eventService)
+        private readonly ApplicationDbContext _context;
+
+        public EventController(IEventService eventService, ApplicationDbContext context)
         {
             _eventService = eventService;
+            _context = context;
         }
         public async Task<IActionResult> Index(DateTime? data)
         {
@@ -46,6 +51,9 @@ namespace Backend3.Controllers
             {
                 string userEmail = User.Identity.Name;
                 var ev = await _eventService.GetEvent(id, userEmail);
+                var group = _context.Group.Include(x => x.Invitations).FirstOrDefault(x => x.Owner == userEmail && x.EventId == ev.Id);
+                ViewBag.UserGroup = group;
+
                 return View(ev);
             }
             catch
