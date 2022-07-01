@@ -210,18 +210,15 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                                             <p class="me-2">@group.Title </p> |
                                             <p class="ms-2">@group.Description</p>
                                         </div>
-                                    </div>
-                                    @if(ViewBag.UserGroup != null)
+                                    @if(ViewBag.UserGroup != null )
                                     {
-                                        var s =  group.Requests.Any(x => x.Id.ToString() == UserManager.GetUserId(User));
-                                        @if (((ViewBag.UserGroup as Group).Id != group.Id) 
-                                            && group.Requests.Any(x => x.Id.ToString() == UserManager.GetUserId(User)))
+                                        @if (group.Requests.Any(x => x.Id.ToString() == UserManager.GetUserId(User)) && group.Owner != UserManager.GetUserName(User))
                                         {
                                             <form class="d-flex align-self-center" method="post" asp-controller="Group" class="text-danger" asp-action="CancelRequest" asp-route-id="@Model.Id" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">
                                                 <input type="submit" value="Отменить заявку" class="me-3 d-flex align-self-center btn btn-danger text-light" />
                                             </form>
                                         }
-                                        else
+                                        else if(group.Owner != UserManager.GetUserName(User))
                                         {
                                             <form class="d-flex align-self-center" method="post" asp-controller="Group" class="text-danger" asp-action="SendRequest" asp-route-id="@Model.Id" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">
                                                 <input type="submit" class="me-3 d-flex align-self-center btn btn-primary text-light" value="Отправить заявку" />
@@ -230,19 +227,21 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                                     }
                                     else
                                     {
-                                        @if (group.Requests.Any(x => x.Id.ToString() == UserManager.GetUserId(User)))
+                                        @if (group.Requests.Any(x => x.Id.ToString() == UserManager.GetUserId(User)) && group.Owner != UserManager.GetUserName(User))
                                         {
                                             <form class="d-flex align-self-center" method="post" asp-controller="Group" class="text-danger" asp-action="CancelRequest" asp-route-id="@Model.Id" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">
                                                 <input type="submit" value="Отменить заявку" class="me-3 d-flex align-self-center btn btn-danger text-light" />
                                             </form>
                                         }
-                                        else
+                                        else if(group.Owner != UserManager.GetUserName(User))
                                         {
                                             <form class="d-flex align-self-center" method="post" asp-controller="Group" class="text-danger" asp-action="SendRequest" asp-route-id="@Model.Id" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">
                                                 <input type="submit" class="me-3 d-flex align-self-center btn btn-primary text-light" value="Отправить заявку" />
                                             </form>
                                         }
                                     }
+                                    </div>
+                                    <hr></hr>
 
                                     
                                 </td>
