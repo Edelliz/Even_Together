@@ -103,7 +103,7 @@ namespace Backend3.Services
         }
         public async Task<List<GroupViewModel>> GetGroup(Guid id)
         {
-            var groups = _context.Group.Where(g => g.EventId == id).ToList();
+            var groups =  _context.Group.Where(g => g.EventId == id).ToList();
             List<GroupViewModel> groupViewModels = new List<GroupViewModel>();
             foreach(var group in groups)
             {
@@ -121,7 +121,7 @@ namespace Backend3.Services
         }
         public async Task<List<ShortUserViewModel>> GetRequests(Guid id)
         {
-            var users = _context.Request.Where(x => x.GroupId == id);
+            var users = _context.Request.Include(x => x.User).Where(x => x.GroupId == id);
             List<ShortUserViewModel> requestViewModels = new List<ShortUserViewModel>();
             foreach (var user in users)
             {
@@ -136,7 +136,7 @@ namespace Backend3.Services
         }
         public async Task<List<ShortUserViewModel>> GetMembers(Guid id)
         {
-            var users = _context.Member.Where(x => x.GroupId == id);
+            var users = _context.Member.Include(x => x.User).Where(x => x.GroupId == id);
             List<ShortUserViewModel> membersViewModels = new List<ShortUserViewModel>();
             foreach(var user in users)
             {

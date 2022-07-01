@@ -7,17 +7,18 @@
 <link href="~/css/EventDetails.css" rel="stylesheet" type="text/css" asp-append-version="true" />
 }
 
-
-
 @{
     String DateOfEvent = @Model.Date.Day + "." + @Model.Date.Month + "." + @Model.Date.Year + " " + @Model.Date.Hour + ":" + @Model.Date.Minute;
     ViewData["Title"] = "Details";
-
 }
 
 <h3>@Model.Title</h3>
 
 <h6>Адрес встречи: <b>@Model.Place</b>, Дата встречи: @DateOfEvent, Стоимость: @Model.Price</h6>
+
+@{
+    var a = ViewBag.UserGroup;
+}
 
 @if (User.IsInRole(ApplicationRoleNames.User))
 {
@@ -28,8 +29,15 @@
             <input type="submit" value="Найти компанию" class="btn btn-dark end-0" />
         </form>
 
-        <button id="btn-buy-ticket" type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#createGroupModal">Создать группу</button>
+        @if (ViewBag.UserGroup != null)
+        {
+            <button id="btn-buy-ticket" type="button" class="btn btn-primary m-2" disabled>Создать группу</button>
+        }
 
+        else
+        {
+            <button id="btn-buy-ticket" type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#createGroupModal">Создать группу</button>
+        }
 
     </div>
 }
@@ -51,7 +59,7 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
             <div class="modal-body">
                 <div class="row d-flex justify-content-center">
                     <div class="col-md-4">
-                        <form asp-action="Create" asp-controller="Group" asp-route-eventId="@Model.Id" method="post" enctype="multipart/form-data">
+                        <form asp-action="Create" asp-controller="Group" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label name="Title" class="control-label">Название</label>
                                 <input name="Title" class="form-control" />
@@ -101,7 +109,6 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
 
 <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-       
     </div>
 </div>
 
@@ -131,9 +138,6 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" href="#review-event"><b>Отзывы</b></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab" href="#group"><b>Группы</b></a>
                 </li>
             </ul>
         </div>
@@ -167,31 +171,24 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                                             {
                                                 if ((ViewBag.UserGroup as Group).Invitations.Any(x => x.UserId == user.Id))
                                                 {
-                                                    
                                                     var groupId = (ViewBag.UserGroup as Group).Id;
 
-                                                    <form method="post" asp-controller="Group" asp-route-id="@Model.Id" asp-route-groupId="@groupId" asp-route-userId="@user.Id" asp-action="CancelInvitation">
-
-                                                            <input type="submit" value="Отменить приглашение" class="me-3 d-flex align-self-center btn btn-danger text-light" />
-                                                    
+                                                    <form class="d-flex align-self-center" method="post" asp-controller="Group" asp-route-id="@Model.Id" asp-route-groupId="@groupId" asp-route-userId="@user.Id" asp-action="CancelInvitation">
+                                                        <input type="submit" value="Отменить приглашение" class="me-3 d-flex align-self-center btn btn-danger text-light" />
                                                     </form>
-
                                                 }
                                                 else
                                                 {
-                                                    <form method="post" asp-controller="Group" asp-action="SendInvitation">
+                                                    <form class="d-flex align-self-center" method="post" asp-controller="Group" asp-action="SendInvitation">
                                                         <input name="userId" value="@user.Id" class="form-control" type="hidden" />
                                                         <input name="id" value="@Model.Id" class="form-control border-2 border-dark" type="hidden" />
                                                         <div class="form-group mt-3 w-100 text-end">
                                                             <input type="submit" value="Пригласить в группу" class="me-3 d-flex align-self-center btn btn-primary text-light" />
                                                         </div>
                                                     </form>
-
                                                 }
-
                                             }
                                         </div>
-
                                     </td>
                                 </tr>
                             }
@@ -208,21 +205,52 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => group.Title)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => group.Description)
-                                </td>
-                                <td>
-                                    <a asp-action="SendRequest" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">Присоединиться</a>
+                                    <div class="w-100 d-flex flex-row align-items-baseline justify-content-between">
+                                        <div class="d-flex flex-row">
+                                            <p class="me-2">@group.Title </p> |
+                                            <p class="ms-2">@group.Description</p>
+                                        </div>
+                                    </div>
+                                    @if(ViewBag.UserGroup != null)
+                                    {
+                                        var s =  group.Requests.Any(x => x.Id.ToString() == UserManager.GetUserId(User));
+                                        @if (((ViewBag.UserGroup as Group).Id != group.Id) 
+                                            && group.Requests.Any(x => x.Id.ToString() == UserManager.GetUserId(User)))
+                                        {
+                                            <form class="d-flex align-self-center" method="post" asp-controller="Group" class="text-danger" asp-action="CancelRequest" asp-route-id="@Model.Id" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">
+                                                <input type="submit" value="Отменить заявку" class="me-3 d-flex align-self-center btn btn-danger text-light" />
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form class="d-flex align-self-center" method="post" asp-controller="Group" class="text-danger" asp-action="SendRequest" asp-route-id="@Model.Id" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">
+                                                <input type="submit" class="me-3 d-flex align-self-center btn btn-primary text-light" value="Отправить заявку" />
+                                            </form>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @if (group.Requests.Any(x => x.Id.ToString() == UserManager.GetUserId(User)))
+                                        {
+                                            <form class="d-flex align-self-center" method="post" asp-controller="Group" class="text-danger" asp-action="CancelRequest" asp-route-id="@Model.Id" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">
+                                                <input type="submit" value="Отменить заявку" class="me-3 d-flex align-self-center btn btn-danger text-light" />
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <form class="d-flex align-self-center" method="post" asp-controller="Group" class="text-danger" asp-action="SendRequest" asp-route-id="@Model.Id" asp-route-userId="@UserManager.GetUserId(User)" asp-route-groupId="@group.Id">
+                                                <input type="submit" class="me-3 d-flex align-self-center btn btn-primary text-light" value="Отправить заявку" />
+                                            </form>
+                                        }
+                                    }
+
+                                    
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
-
-
             <div class="tab-pane" id="review-event">
                 <form method="post" asp-action="PostReview">
                     <input name="Text" class="form-control inputFields" />
@@ -247,31 +275,6 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                         }
                     </div>
                 </div>
-            </div>
-
-            <div class="tab-pane" id="group">
-                <table class="w-100 h-100">
-                    <tbody class="w-100">
-                        @{
-                            for (int i = 0; i < Model.Groups.Count; i += 3)
-                            {
-                                <tr class="row w-100 d-flex-column justify-content-between">
-                                    @for (int j = i; j < Math.Min(i + 3, Model.Groups.Count); j++)
-                                    {
-                                        <td class="col-4 cardsFeed p-3">
-                                            <a data-bs-toggle="modal" data-bs-target="#groupModal" class="scale card w-100">
-                                                <img id="user-@Model.Groups[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
-                                                <div class="card-img-overlay h-100 ">
-                                                    <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Groups[j].Title</h4>
-                                                </div>
-                                            </a>
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
