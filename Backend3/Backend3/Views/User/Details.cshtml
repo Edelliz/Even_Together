@@ -50,10 +50,10 @@
                                                 <img id="user-@Model.Invitations[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
                                                 <div class="card-img-overlay h-100 ">
                                                     <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Invitations[j].Title</h4>
-                                                      <form method="post" asp-controller="Group" asp-action="RefuseInvitation" asp-route-id="@Model.Invitations[j].Id" class="m-2">
+                                                      <form method="post" asp-controller="Group" asp-action="RefuseInvitation" asp-route-groupId="@Model.Invitations[j].Id" class="m-2">
                                                     <input type="submit" value="Отказаться" class="btn end-0" />
                                                 </form>
-                                                <form method="post" asp-controller="Group" asp-action="AcceptInvitation" asp-route-id="@Model.Invitations[j].Id" class="m-2">
+                                                <form method="post" asp-controller="Group" asp-action="AcceptInvitation" asp-route-groupId="@Model.Invitations[j].Id" class="m-2">
                                                     <input type="submit" value="Принять заявку" class="btn  end-0" />
                                                 </form>
                                                 </div>
