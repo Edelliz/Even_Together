@@ -54,6 +54,7 @@ namespace Backend3.Controllers
                 var group = _context.Group.Include(x => x.Invitations).FirstOrDefault(x => x.Owner == userEmail && x.EventId == ev.Id);
                 ViewBag.UserGroup = group;
 
+
                 return View(ev);
             }
             catch

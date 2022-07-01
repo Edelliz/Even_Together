@@ -31,7 +31,7 @@ namespace Backend3.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(CreateGroupViewModel model, Guid eventId)
+        public async Task<IActionResult> Create(CreateGroupViewModel model, Guid id)
         {
 
             if (!ModelState.IsValid)
@@ -40,8 +40,8 @@ namespace Backend3.Controllers
             }
             var user = await _userManager.GetUserAsync(User);
 
-            await _groupService.Create(model, user, eventId);
-            return RedirectToAction("Index");
+            await _groupService.Create(model, user, id);
+            return RedirectToAction("Details", "Event", new { id });
         }
         [HttpPost]
         [Authorize]
@@ -53,11 +53,11 @@ namespace Backend3.Controllers
         }
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> SendRequest(Guid groupId, Guid userId)
+        public async Task<IActionResult> SendRequest(Guid groupId, Guid userId, Guid id)
         {
             string userEmail = User.Identity.Name;
             await _groupService.SendRequest(userEmail, groupId);
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Event", new { id } );
         }
         [HttpPost]
         [Authorize]
@@ -102,6 +102,17 @@ namespace Backend3.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", "Event", new {id });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CancelRequest(Guid groupId, Guid userId, Guid id)
+        {
+            var request = _context.Request.FirstOrDefault(x => x.GroupId == groupId && x.UserId == userId);
+            _context.Request.Remove(request);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "Event", new { id });
         }
     }
 }

@@ -73,10 +73,12 @@ namespace Backend3.Services
 
         public async Task SendRequest(string email, Guid groupId)
         {
+            var userId = (await _context.Users.FirstOrDefaultAsync(x => x.Email == email)).Id;
+            
             var request = new Request
             {
                 GroupId = groupId,
-                UserId = (await _userManager.FindByEmailAsync(email)).Id
+                UserId = userId
             };
             await _context.AddAsync(request);
             await _context.SaveChangesAsync();
