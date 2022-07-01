@@ -129,7 +129,7 @@ namespace Backend3.Services
             {
                 throw new Exception();
             }
-            var userId = (await _userManager.FindByEmailAsync(email)).Id;
+            var userId = (await _context.Users.FirstOrDefaultAsync(x => x.Email == email)).Id;
             var invite = _context.Invitations.FirstOrDefault( x => x.GroupId == groupId && x.UserId == userId);
             _context.Invitations.Remove(invite);
 

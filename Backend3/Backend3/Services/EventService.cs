@@ -113,7 +113,6 @@ namespace Backend3.Services
                     Title = group.Title,
                     Owner = group.Owner,
                     Description = group.Description,
-                    Owner = group.Owner,
                     Users = await GetMembers(group.Id),
                     Requests = await GetRequests(group.Id),
                     Size = group.Size,

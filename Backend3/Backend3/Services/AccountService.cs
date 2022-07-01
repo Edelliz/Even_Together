@@ -86,9 +86,9 @@ namespace Backend3.Services
                     Id = invite.GroupId,
                     Title = invite.Group.Title,
                     Description = invite.Group.Description,
-                    Owner = request.Group.Owner,
-                    Users = await _eventService.GetMembers(invite.GroupId),
-                    Requests = await _eventService.GetRequests(invite.GroupId),
+                    Owner = invite.Group.Owner,
+                    Users = new List<ShortUserViewModel>(),
+                    Requests = new List<ShortUserViewModel>(),
                     Size = invite.Group.Size,
                 });
             }
