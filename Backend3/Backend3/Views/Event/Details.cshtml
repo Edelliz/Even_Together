@@ -99,6 +99,12 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
 </div>
 
 
+<div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+       
+    </div>
+</div>
+
 <div class="d-flex justify-content-center m-4">
     @if (String.IsNullOrEmpty(@Model.Poster))
     {
@@ -125,6 +131,9 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="tab" href="#review-event"><b>Отзывы</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#group"><b>Группы</b></a>
                 </li>
             </ul>
         </div>
@@ -238,6 +247,31 @@ else if (User.IsInRole(ApplicationRoleNames.Organizer) && UserManager.GetUserNam
                         }
                     </div>
                 </div>
+            </div>
+
+            <div class="tab-pane" id="group">
+                <table class="w-100 h-100">
+                    <tbody class="w-100">
+                        @{
+                            for (int i = 0; i < Model.Groups.Count; i += 3)
+                            {
+                                <tr class="row w-100 d-flex-column justify-content-between">
+                                    @for (int j = i; j < Math.Min(i + 3, Model.Groups.Count); j++)
+                                    {
+                                        <td class="col-4 cardsFeed p-3">
+                                            <a data-bs-toggle="modal" data-bs-target="#groupModal" class="scale card w-100">
+                                                <img id="user-@Model.Groups[j].Id" class="card-img-top h-100" src="/files/imgplaceholder.png">
+                                                <div class="card-img-overlay h-100 ">
+                                                    <h4 class="event-title card-title text-light rounded-pill p-2">@Model.Groups[j].Title</h4>
+                                                </div>
+                                            </a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

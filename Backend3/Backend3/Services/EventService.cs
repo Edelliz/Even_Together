@@ -275,7 +275,7 @@ namespace Backend3.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task PostReview(Guid id, string text, string email)
+       public async Task PostReview(Guid id, string text, string email)
         {
             var review = await _context.Review.FirstOrDefaultAsync(x => x.EventId == id);
 
